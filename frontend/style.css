@@ -1,0 +1,27 @@
+body {
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.errorMessage{
+    width: 30vw;
+    height: 40vw;
+    position: absolute;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.errorIcon{
+    width: 20%;
+    margin: 30px;
+}
+
+.errorText{
+    width: 70%;
+}
