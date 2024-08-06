@@ -14,7 +14,12 @@ function createMainWindow(){
     const mainWindow = new BrowserWindow({
         title: "Collage Cuisine",
         width: 1000,
-        height: 600
+        height: 600,
+        webPreferences:{
+            contextIsolation: true,
+            nodeIntegration: true,
+            preload: path.join(__dirname, "preload.js")
+        }
     });
 
     const startUrl = url.format({
@@ -83,5 +88,5 @@ function openPort(){
 }
 
 parser.on('data', function(data) {  
-    console.log('Received data from port: ' + data);
+    //console.log('Received data from port: ' + data);
 });

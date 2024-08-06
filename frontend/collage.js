@@ -4,7 +4,8 @@ function setup(){
 }
 
 function draw(){
-
+    background(0)
+    circle(200,200,electron.circleValue)
 }
 
 function windowResized(){
