@@ -80,8 +80,6 @@ function openPort(){
             getSerialPort()
         }, 2000)
     }
-
-    
 }
 
 parser.on('data', function(data) {  

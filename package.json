@@ -1,19 +1,30 @@
 {
   "name": "collage_cuisine_v2.0",
-  "version": "1.0.0",
-  "description": "Hello Read Luca du geili sau",
+  "version": "0.0.1",
+  "description": "Converting the analog values into a digital collage",
   "main": "backend/main.js",
+  "build": {
+    "appId": "com.tuurm.collagecuisine",
+    "productName": "Collage Cuisine",
+    "mac": {
+      "category": "public.app-category.education",
+      "target": "dmg"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "dev:watch": "npx electronmon --trace-warnings . "
+    "dev:watch": "npx electronmon --trace-warnings . ",
+    "dist": "electron-builder"
   },
   "author": "Basil Egger, Luca Busby",
   "license": "ISC",
   "dependencies": {
+    "serialport": "^12.0.0"
+  },
+  "devDependencies": {
     "electron": "^31.3.1",
     "electron-builder": "^24.13.3",
-    "electron-updater": "^6.2.1",
-    "serialport": "^12.0.0"
+    "electron-updater": "^6.2.1"
   }
 }
