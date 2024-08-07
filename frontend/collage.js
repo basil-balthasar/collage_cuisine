@@ -16,3 +16,12 @@ function windowResized(){
 window.bridge.data((event, data)=>{
     //console.log(data)
 })
+
+
+
+onkeydown = (event) => {
+    console.log("take picture")
+    bridge.capture({
+        filename: "userfile.png"
+    })
+}

@@ -1,6 +1,7 @@
-const {app, BrowserWindow, ipcMain} = require("electron");
+const {app, BrowserWindow, ipcMain, webContents} = require("electron");
 const url = require("url");
 const path = require("path");
+const fs = require("fs")
 
 const {SerialPort} = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
@@ -32,6 +33,14 @@ function createMainWindow(){
     });
 
     mainWindow.loadURL(startUrl);
+    // setTimeout(()=>{
+    //     mainWindow.webContents.capturePage().then((img)=>{
+    //         fs.writeFile("./image.png", img.toPNG(), "base64", function(err){
+    //             if(err) throw err;
+    //             console.log("saved")
+    //         })
+    //     })
+    // },3000)
 }
 
 app.whenReady().then(createMainWindow);
@@ -96,8 +105,3 @@ function openPort(){
         }, 2000)
     }
 }
-
-parser.on('data', function(data) {  
-    //console.log('Received data from port: ' + data);
-    //mainWindow.webContents.send("data", data)
-});

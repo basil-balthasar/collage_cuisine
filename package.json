@@ -20,7 +20,6 @@
   "author": "Basil Egger, Luca Busby",
   "license": "ISC",
   "dependencies": {
-    "electron-screenshot": "^1.0.5",
     "serialport": "^12.0.0"
   },
   "devDependencies": {
