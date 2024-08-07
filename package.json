@@ -1,6 +1,6 @@
 {
   "name": "collage_cuisine_v2.0",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Converting the analog values into a digital collage",
   "main": "backend/main.js",
   "build": {
@@ -15,7 +15,7 @@
     }
   },
   "repository": "https://github.com/basil-balthasar/collage_cuisine_v2.0",
-  "publish":{
+  "publish": {
     "provider": "github",
     "releaseType": "release"
   },
@@ -28,11 +28,11 @@
   "author": "Basil Egger, Luca Busby",
   "license": "ISC",
   "dependencies": {
+    "electron-updater": "^6.2.1",
     "serialport": "^12.0.0"
   },
   "devDependencies": {
     "electron": "^31.3.1",
-    "electron-builder": "^24.13.3",
-    "electron-updater": "^6.2.1"
+    "electron-builder": "^24.13.3"
   }
 }
