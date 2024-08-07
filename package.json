@@ -14,7 +14,7 @@
       "output": "dist"
     }
   },
-  "repository": "https://github.com/basil-balthasar/collage_cuisine_v2.0",
+  "repository": "https://github.com/basil-balthasar/collage_cuisine_releases",
   "publish": {
     "provider": "github",
     "releaseType": "release"
