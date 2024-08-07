@@ -9,6 +9,9 @@
     "mac": {
       "category": "public.app-category.education",
       "target": "dmg"
+    },
+    "directories": {
+      "output": "dist"
     }
   },
   "scripts": {
