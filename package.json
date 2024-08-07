@@ -14,6 +14,11 @@
       "output": "dist"
     }
   },
+  "repository": "https://github.com/basil-balthasar/collage_cuisine_v2.0",
+  "publish":{
+    "provider": "github",
+    "releaseType": "release"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",

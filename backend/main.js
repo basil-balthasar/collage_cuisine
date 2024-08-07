@@ -3,9 +3,14 @@ const url = require("url");
 const path = require("path");
 const fs = require("fs")
 
+const {autoUpdater, AppUpdater} = require("electron-updater");
+
+autoUpdater.autoDownload = true;
+autoUpdater.autoInstallOnAppQuit = true;
+
 const {SerialPort} = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
-const { error } = require("console");
+const { error, info } = require("console");
 const parsers = SerialPort.parsers;
 const parser = new ReadlineParser({ delimeter: "\r\n" });
 
@@ -43,7 +48,14 @@ function createMainWindow(){
     // },3000)
 }
 
-app.whenReady().then(createMainWindow);
+app.whenReady().then(()=>{
+    createMainWindow;
+    //autoUpdater.checkForUpdates();
+});
+
+// autoUpdater.on("update-available", (info) => {
+//     autoUpdater.downloadUpdate();
+// })
 // app.on('activate', function () {
 //     if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
 //   })
