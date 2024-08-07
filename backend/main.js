@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require("electron");
+const {app, BrowserWindow, ipcMain} = require("electron");
 const url = require("url");
 const path = require("path");
 
@@ -18,7 +18,7 @@ function createMainWindow(){
         webPreferences:{
             contextIsolation: true,
             nodeIntegration: true,
-            preload: path.join(__dirname, "preload.js")
+            preload: path.join(__dirname, "../frontend/preload.js")
         }
     });
 
@@ -27,10 +27,20 @@ function createMainWindow(){
         protocol: "file"
     });
 
+    parser.on('data', function(data) {  
+        mainWindow.webContents.send("data", data)
+    });
+
     mainWindow.loadURL(startUrl);
 }
 
 app.whenReady().then(createMainWindow);
+// app.on('activate', function () {
+//     if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
+//   })
+// app.on('window-all-closed', function () {
+//   if (process.platform !== 'darwin') app.quit()
+// })
 
 async function getSerialPort(){
     await SerialPort.list().then((ports, err) => {
@@ -89,4 +99,5 @@ function openPort(){
 
 parser.on('data', function(data) {  
     //console.log('Received data from port: ' + data);
+    //mainWindow.webContents.send("data", data)
 });

@@ -5,10 +5,14 @@ function setup(){
 
 function draw(){
     background(0)
-    circle(200,200,electron.circleValue)
+    //circle(200,200,electron.circleValue)
 }
 
 function windowResized(){
     resizeCanvas(windowWidth, windowHeight)
     background(random(0, 255))
 }
+
+window.bridge.data((event, data)=>{
+    //console.log(data)
+})
