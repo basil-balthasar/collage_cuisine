@@ -15,6 +15,7 @@ const parsers = SerialPort.parsers;
 const parser = new ReadlineParser({ delimeter: "\r\n" });
 
 let teensyPort;
+let mainWindow;
 
 function createMainWindow(){
     const mainWindow = new BrowserWindow({
@@ -33,10 +34,6 @@ function createMainWindow(){
         protocol: "file"
     });
 
-    parser.on('data', function(data) {  
-        mainWindow.webContents.send("data", data)
-    });
-
     mainWindow.loadURL(startUrl);
 
     //screenshot
@@ -48,15 +45,27 @@ function createMainWindow(){
     //         })
     //     })
     // },3000)
+
+    return mainWindow;
 }
 
 app.whenReady().then(()=>{
-    myMainWindow = createMainWindow();
+    mainWindow = createMainWindow();
     autoUpdater.checkForUpdates();
+    mainWindow.webContents.send("updateStatus", "checking for update")
 });
 
 autoUpdater.on("update-available", (info) => {
+    mainWindow.webContents.send("updateStatus", "Update avaiable")
     autoUpdater.downloadUpdate();
+})
+
+autoUpdater.on("update-downloaded", (info)=>{
+    mainWindow.webContents.send("updateStatus", "update downloaded")
+})
+
+autoUpdater.on("error", (info)=>{
+    mainWindow.webContents.send("updateStatus", info)
 })
 
 
@@ -66,6 +75,8 @@ autoUpdater.on("update-available", (info) => {
 // app.on('window-all-closed', function () {
 //   if (process.platform !== 'darwin') app.quit()
 // })
+
+getSerialPort()
 
 async function getSerialPort(){
     await SerialPort.list().then((ports, err) => {
@@ -88,8 +99,6 @@ async function getSerialPort(){
     openPort()
   })
 }
-
-getSerialPort()
 
 function openPort(){
     try{
@@ -121,3 +130,7 @@ function openPort(){
         }, 2000)
     }
 }
+
+parser.on('data', function(data) {  
+    mainWindow.webContents.send("data", data)
+});
