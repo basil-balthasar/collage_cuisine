@@ -1,10 +1,10 @@
 function setup(){
     createCanvas(windowWidth, windowHeight)
-    background(0,255,0)
+    background(255,0,0)
 }
 
 function draw(){
-    background(0,255,0)
+    background(255,0,0)
     //circle(200,200,electron.circleValue)
 }
 

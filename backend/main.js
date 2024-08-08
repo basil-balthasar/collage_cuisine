@@ -48,11 +48,16 @@ function createMainWindow(){
     // },3000)
 }
 
-app.whenReady().then(createMainWindow);
+app.whenReady().then(()=>{
+    createMainWindow();
+    autoUpdater.checkForUpdates();
+});
 
 // autoUpdater.on("update-available", (info) => {
 //     autoUpdater.downloadUpdate();
 // })
+
+
 // app.on('activate', function () {
 //     if (BrowserWindow.getAllWindows().length === 0) createMainWindow()
 //   })
