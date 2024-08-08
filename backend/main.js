@@ -5,7 +5,7 @@ const fs = require("fs");
 
 const {autoUpdater, AppUpdater} = require("electron-updater");
 
-autoUpdater.autoDownload = true;
+autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 
 const {SerialPort} = require("serialport");
