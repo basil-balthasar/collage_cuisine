@@ -1,8 +1,5 @@
-const {contextBridge, ipcRenderer} = require ("electron");
+const {contextBridge, ipcRenderer, app} = require ("electron");
 
 let bridge = {
     data: (callback) => ipcRenderer.on("data", (callback)),
-    capture: screenshot
 };
-
-contextBridge.exposeInMainWorld("bridge", bridge);

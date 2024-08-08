@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, webContents} = require("electron");
+const {app, BrowserWindow, ipcMain, webContents, ipcRenderer} = require("electron");
 const url = require("url");
 const path = require("path");
 const fs = require("fs");
@@ -38,6 +38,8 @@ function createMainWindow(){
     });
 
     mainWindow.loadURL(startUrl);
+
+    //screenshot
     // setTimeout(()=>{
     //     mainWindow.webContents.capturePage().then((img)=>{
     //         fs.writeFile("./image.png", img.toPNG(), "base64", function(err){
@@ -49,13 +51,13 @@ function createMainWindow(){
 }
 
 app.whenReady().then(()=>{
-    createMainWindow();
+    myMainWindow = createMainWindow();
     autoUpdater.checkForUpdates();
 });
 
-// autoUpdater.on("update-available", (info) => {
-//     autoUpdater.downloadUpdate();
-// })
+autoUpdater.on("update-available", (info) => {
+    autoUpdater.downloadUpdate();
+})
 
 
 // app.on('activate', function () {
