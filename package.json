@@ -17,6 +17,9 @@
       "publish": "github",
       "sign": true
     },
+    "win":{
+      "target": "nsis"
+    },
     "directories": {
       "output": "dist"
     }
