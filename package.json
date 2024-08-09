@@ -14,7 +14,8 @@
     "mac": {
       "category": "public.app-category.education",
       "target": "default",
-      "publish": "github"
+      "publish": "github",
+      "sign": true
     },
     "directories": {
       "output": "dist"

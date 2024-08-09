@@ -22,6 +22,7 @@ function createMainWindow(){
         title: "Collage Cuisine",
         width: 1000,
         height: 600,
+        fullscreen: false,
         webPreferences:{
             contextIsolation: true,
             nodeIntegration: true,
@@ -35,16 +36,6 @@ function createMainWindow(){
     });
 
     mainWindow.loadURL(startUrl);
-
-    //screenshot
-    // setTimeout(()=>{
-    //     mainWindow.webContents.capturePage().then((img)=>{
-    //         fs.writeFile("./image.png", img.toPNG(), "base64", function(err){
-    //             if(err) throw err;
-    //             console.log("saved")
-    //         })
-    //     })
-    // },3000)
 
     return mainWindow;
 }
@@ -134,3 +125,16 @@ function openPort(){
 parser.on('data', function(data) {  
     mainWindow.webContents.send("data", data)
 });
+
+ipcMain.handle("saveImage",()=>{
+    console.log("saved image")
+})
+
+function saveImage(){
+    mainWindow.webContents.capturePage().then((img)=>{
+        fs.writeFile("./image.png", img.toPNG(), "base64", function(err){
+            if(err) throw err;
+            console.log("saved")
+        })
+    })
+}
