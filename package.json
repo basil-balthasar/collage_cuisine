@@ -1,6 +1,6 @@
 {
   "name": "collage_cuisine_v2.0",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Converting the analog values into a digital collage",
   "main": "backend/main.js",
   "repository": "https://github.com/basil-balthasar/collage_cuisine_v2.0",
@@ -14,8 +14,7 @@
     "mac": {
       "category": "public.app-category.education",
       "target": "default",
-      "publish": "github",
-      "sign": true
+      "publish": "github"
     },
     "win":{
       "target": "nsis"
