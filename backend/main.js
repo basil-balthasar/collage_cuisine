@@ -123,7 +123,8 @@ function openPort(){
     }
 }
 
-parser.on('data', function(data) {  
+parser.on('data', function(data) {
+    data = data.split(",")  
     mainWindow.webContents.send("data", data)
 });
 
