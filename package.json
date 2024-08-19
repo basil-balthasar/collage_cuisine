@@ -16,7 +16,7 @@
       "target": "default",
       "publish": "github"
     },
-    "win":{
+    "win": {
       "target": "nsis"
     },
     "directories": {
@@ -33,6 +33,8 @@
   "author": "Basil Egger, Luca Busby",
   "license": "ISC",
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.1",
+    "dotenv": "^16.4.5",
     "electron-updater": "^6.2.1",
     "serialport": "^12.0.0"
   },

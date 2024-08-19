@@ -1,3 +1,6 @@
+require('dotenv').config();
+const supabase = require("./config/supabaseClient.js");
+
 const {app, BrowserWindow, ipcMain, webContents, ipcRenderer} = require("electron");
 const url = require("url");
 const path = require("path");
@@ -130,11 +133,18 @@ ipcMain.handle("saveImage",()=>{
     console.log("saved image")
 })
 
-function saveImage(){
-    mainWindow.webContents.capturePage().then((img)=>{
-        fs.writeFile("./image.png", img.toPNG(), "base64", function(err){
-            if(err) throw err;
-            console.log("saved")
-        })
-    })
-}
+// function saveImage(){
+//     mainWindow.webContents.capturePage().then((img)=>{
+//         fs.writeFile("./image.png", img.toPNG(), "base64", function(err){
+//             if(err) throw err;
+//             console.log("saved")
+//         })
+//     })
+// }
+
+app.whenReady().then(() => {
+    mainWindow = createMainWindow();
+
+    // Register the ipcMain handler here, ensuring it only runs once
+    ipcMain.handle("saveImage", saveImage);
+});
