@@ -22,7 +22,7 @@ function createMainWindow(){
         title: "Collage Cuisine",
         width: 1000,
         height: 600,
-        fullscreen: false,
+        fullscreen: true,
         webPreferences:{
             contextIsolation: true,
             nodeIntegration: true,
@@ -124,7 +124,7 @@ function openPort(){
 }
 
 parser.on('data', function(data) {
-    data = data.split(",")  
+    data = data.split(",")
     mainWindow.webContents.send("data", data)
 });
 
