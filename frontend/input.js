@@ -1,25 +1,25 @@
-let layerData = [38, 40, 39];
+let layerData = [0, 1, 2];
 
-let backgroundIsOn = 10;
-let backgroundImage = 38;
-let backgroundScale = 37;
-let backgroundJoystick = [11, 14, 13, 12];
+let backgroundIsOn = 3;
+let backgroundImage = 4;
+let backgroundScale = 5;
+let backgroundJoystick = [6, 7, 8, 9];
 
-let foregroundIsOn = 21;
-let foregroundImage = 35;
-let foregroundScale = 36;
-let foregroundJoystick = [23, 22, 24, 20];
+let foregroundIsOn = 10;
+let foregroundImage = 11;
+let foregroundScale = 12;
+let foregroundJoystick = [13, 14, 15, 16];
 
-let layerOneIsOn = 9;
-let layerOneImage = 31;
-let layerOneScale = 30;
-let layerOneRotation = 29;
-let layerOneJoystick = [5, 8, 7, 6];
-let layerOneBlendModes = [15, 16, 17];
+let layerOneIsOn = 17;
+let layerOneImage = 18;
+let layerOneScale = 19;
+let layerOneRotation = 20;
+let layerOneJoystick = [21, 22, 23, 24];
+let layerOneBlendModes = [25, 26, 27];
 
-let layerTwoIsOn = 3;
-let layerTwoImage = 33;
-let layerTwoScale = 34;
-let layerTwoRotation = 32;
-let layerTwoJoystick = [4, 2, 0, 1];
-let layerTwoBlendModes = [28, 26, 25];
+let layerTwoIsOn = 28;
+let layerTwoImage = 29;
+let layerTwoScale = 30;
+let layerTwoRotation = 31;
+let layerTwoJoystick = [32, 33, 34, 35];
+let layerTwoBlendModes = [36, 37, 38];

@@ -1,5 +1,9 @@
+let joystickSpeed = 1;
+let blendModes;
+
 function setup(){
     createCanvas(windowWidth, windowHeight)
+    blendModes = [BLEND, DIFFERENCE, SCREEN, BURN]
 }
 
 function draw(){
