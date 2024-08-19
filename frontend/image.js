@@ -1,10 +1,3 @@
-let numberOfImages = [2, 0, 2, 0]
-
-let backgroundImages = new ImageObject(true, backgroundImages[0], createVector(0,0) , 1.0, 0.0, 0);
-let foregroundImages = new ImageObject(true, foregroundImages[0], createVector(0,0), 1.0, 0.0, 0);
-let layerOneImages = new ImageObject(true, layerOneImages[0], createVector(0,0), 0.1, 45.0, 0);
-let layerTwoImages =  new ImageObject(false, layerTwoImages[0], createVector(0,0), 1.0, 0.0, 0);
-
 class ImageObject{
     constructor(isOn, image, position, scale, rotation, blendMode){
         this.isOn = isOn
@@ -15,6 +8,15 @@ class ImageObject{
         this.blendMode = blendMode
     }
 }
+
+
+
+let numberOfImages = [2, 0, 2, 0]
+
+let backgroundImages = new ImageObject(true, backgroundImages[0], createVector(0,0) , 1.0, 0.0, 0);
+let foregroundImages = new ImageObject(true, foregroundImages[0], createVector(0,0), 1.0, 0.0, 0);
+let layerOneImages = new ImageObject(true, layerOneImages[0], createVector(0,0), 0.1, 45.0, 0);
+let layerTwoImages =  new ImageObject(false, layerTwoImages[0], createVector(0,0), 1.0, 0.0, 0);
 
 function preload(){
     try{
