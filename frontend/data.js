@@ -8,6 +8,21 @@ function readData(data){
     let b = map(data[backgroundRGB[2]], 0, 1023, 0, 255)
     backgroundColor = color(r,g,b)
 
+    zOrder = [0,1,2,null,null,null]
+    for(let l = 0; l < layerData.length; l++){
+        if(data[layerData[l]] >= 0 && data[layerData[l]] <= 100){
+            zOrder[3] = l;
+            zOrder[l] = null;
+        }else if(data[layerData[l]] >= 500 && data[layerData[l]] <= 600){
+            zOrder[4] = l;
+            zOrder[l] = null;
+        }else if(data[layerData[l]] >= 900 && data[layerData[l]] <= 1000){
+            zOrder[5] = l;
+            zOrder[l] = null;
+        }
+    }
+
+
     assignSurfaceData(
         data,
         myBackground,
@@ -75,6 +90,8 @@ function assignElementData(data, layer, images, isOn, image, scale, rotation, jo
             layer.blendMode = blendModes[2];
         }else if(data[blendModeData[0]] == 1 && data[blendModeData[1]] == 1 && data[blendModeData[2]] == 0){
             layer.blendMode = blendModes[3];
+        }else{
+            layer.blendMode = blendModes[0]
         }
     }else layer.isOn = false;
 }

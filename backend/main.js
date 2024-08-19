@@ -22,7 +22,7 @@ function createMainWindow(){
         title: "Collage Cuisine",
         width: 1000,
         height: 600,
-        fullscreen: true,
+        fullscreen: false,
         webPreferences:{
             contextIsolation: true,
             nodeIntegration: true,

@@ -5,6 +5,8 @@ let elementMaxScale = 0.5;
 let blendModes;
 let backgroundColor
 
+let zOrder = [0,1,2,null,null,null]
+
 function setup(){
     createCanvas(windowWidth, windowHeight)
     background(0);
@@ -14,13 +16,35 @@ function setup(){
 
 function draw(){
     background(0)
+    blendMode(BLEND)
     if(myBackground.isOn){
         drawSurface(myBackground)
     }else{
         background(backgroundColor)
     }
-    if(layerOne.isOn){
-        drawElement(layerOne)
+    
+    for(let l = 0; l < zOrder.length; l++){
+        switch(zOrder[l]){
+            case 0:
+                if(foreground.isOn == true){
+                    drawSurface(foreground);
+                }
+                break;
+            case 1:
+                if(layerOne.isOn == true){
+                    blendMode(layerOne.blendMode)
+                    drawElement(layerOne);
+                }
+                break;
+            case 2:
+                if(layerTwo.isOn == true){
+                    blendMode(layerTwo.blendMode)
+                    drawElement(layerTwo);
+                }
+                break;
+            case null:
+                break;              
+        }
     }
 }
 
