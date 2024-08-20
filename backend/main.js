@@ -21,6 +21,7 @@ const fileName = 'test2.png'
 
 let teensyPort;
 let mainWindow;
+let diaWindow
 
 function createMainWindow(){
     const mainWindow = new BrowserWindow({
@@ -31,12 +32,12 @@ function createMainWindow(){
         webPreferences:{
             contextIsolation: true,
             nodeIntegration: true,
-            preload: path.join(__dirname, "../frontend/preload.js")
+            preload: path.join(__dirname, "../frontend/collage/preload.js")
         }
     });
 
     const startUrl = url.format({
-        pathname: path.join(__dirname, "../frontend/index.html"),
+        pathname: path.join(__dirname, "../frontend/collage/index.html"),
         protocol: "file"
     });
 
@@ -45,8 +46,31 @@ function createMainWindow(){
     return mainWindow;
 }
 
+function createDiaWindow(){
+    const diaWindow = new BrowserWindow({
+        title: "Diashow",
+        width: 500,
+        height: 300,
+        fullscreen: false,
+        webPreferences:{
+            contextIsolation: true,
+            nodeIntegration: true
+        }
+    })
+
+    const startUrl = url.format({
+        pathname: path.join(__dirname, "../frontend/diashow/dia.html"),
+        protocol: "file"
+    });
+
+    diaWindow.loadURL(startUrl);
+
+    return diaWindow;
+}
+
 app.whenReady().then(()=>{
     mainWindow = createMainWindow();
+    diaWindow = createDiaWindow();
     autoUpdater.checkForUpdates();
     mainWindow.webContents.send("updateStatus", "checking for update")
     getImageURL();
