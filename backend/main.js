@@ -1,7 +1,7 @@
 require('dotenv').config();
 const supabase = require("./config/supabaseClient.js");
 
-const {app, BrowserWindow, ipcMain, webContents, ipcRenderer} = require("electron");
+const {app, BrowserWindow, ipcMain, webContents, ipcRenderer, dialog} = require("electron");
 const url = require("url");
 const path = require("path");
 const fs = require("fs");
@@ -92,6 +92,7 @@ async function getSerialPort(){
     });
     if(teensyPort == null){
         console.error("Teensy not connected, will try again")
+        //dialog.showErrorBox("Teensy not connected", "check USB connection to teensy and press ok to try again")
     }
     openPort()
   })
@@ -128,7 +129,8 @@ function openPort(){
     }
 }
 
-parser.on('data', function(data) {  
+parser.on('data', function(data) {
+    data = data.split(",")
     mainWindow.webContents.send("data", data)
 });
 
