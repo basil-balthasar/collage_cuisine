@@ -22,6 +22,7 @@ let layerOneImages = [];
 let layerTwoImages = [];
 
 function preload(){
+    blendModes = [BLEND, DIFFERENCE, SCREEN, BURN]
     for(let b = 0; b<numberOfImages[0]; b++){
         backgroundImages[b] = loadImage("./content/collageElements/BG/"+b+".png")
     }
