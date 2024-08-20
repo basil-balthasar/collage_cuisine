@@ -24,6 +24,7 @@ autoUpdater.autoInstallOnAppQuit = true;
 let fileName = 'test2.png'
 
 let teensyCheckInterval = 2000
+let showSerialError = false
 
 let mainWindow;
 let diaWindow;
@@ -96,7 +97,6 @@ autoUpdater.on("error", (info)=>{
 
 async function getSerialPort(){
     let teensyPort
-    let showError = false
     await SerialPort.list().then((ports, err) => {
     if(err) {
       console.error(err)
@@ -113,13 +113,10 @@ async function getSerialPort(){
     });
     if(teensyPort == null){
         console.error("Teensy not connected, will try again")
-        if(!showError){
+        if(!showSerialError){
             dialog.showMessageBox(mainWindow,{signal:serialAbortController.signal, message:"Module nicht verbunden.", type:"warning", title:"FEHLER-006"})
-            showError = true;
+            showSerialError = true;
         }
-        setTimeout(()=>{
-            getSerialPort()
-        }, teensyCheckInterval)
     }
     openPort(teensyPort)
   })
