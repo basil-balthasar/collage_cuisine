@@ -1,3 +1,6 @@
+require('dotenv').config();
+const supabase = require("./config/supabaseClient.js");
+
 const {app, BrowserWindow, ipcMain, webContents, ipcRenderer, dialog} = require("electron");
 const url = require("url");
 const path = require("path");
@@ -10,9 +13,11 @@ autoUpdater.autoInstallOnAppQuit = true;
 
 const {SerialPort} = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
-const { error, info } = require("console");
+const { error, info, Console } = require("console");
 const parsers = SerialPort.parsers;
 const parser = new ReadlineParser({ delimeter: "\r\n" });
+
+const fileName = 'test2.png'
 
 let teensyPort;
 let mainWindow;
@@ -44,6 +49,7 @@ app.whenReady().then(()=>{
     mainWindow = createMainWindow();
     autoUpdater.checkForUpdates();
     mainWindow.webContents.send("updateStatus", "checking for update")
+    getImageURL();
 });
 
 autoUpdater.on("update-available", (info) => {
@@ -139,4 +145,44 @@ function saveImage(){
             console.log("saved")
         })
     })
+}
+
+//Supabase
+
+async function uploadCollage() {
+    try {
+        const storageFilePath = 'collages/' + fileName;
+        const collageFileBuffer = fs.readFileSync('backend/screenshots/' + fileName);
+        const { data, error } = await supabase
+        .storage
+        .from('Collages')
+        .upload(storageFilePath, collageFileBuffer, {
+            cacheControl: '3600',
+            upsert: false
+        })
+        if (error) {
+            console.error("Error uploading file:", error);
+        } else {
+            console.log("File data:", data);
+        }
+    } catch (error) {
+        console.error("An unexpected error occurred while uploading screenshot:", error);
+    }
+}
+
+async function getImageURL() {
+    try {
+        const storageFilePath = 'collages/' + fileName;
+        const { data , error } = supabase
+        .storage
+        .from('Collages')
+        .getPublicUrl(storageFilePath)
+        if (error) {
+            console.error("Error fetching ImageURL:", error);
+        } else {
+            console.log("ImageURL:", data);
+        }
+    } catch (error) {
+        console.error("An unexpected error occurred while fetching ImageURL:", err);
+    }
 }
