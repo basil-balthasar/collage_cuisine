@@ -123,6 +123,7 @@ async function getSerialPort(){
 }
 
 function openPort(teensyPort){
+    let port
     try{
         port = new SerialPort({
             path: teensyPort.path,
@@ -132,27 +133,30 @@ function openPort(teensyPort){
             stopBits: 1,
             flowControl: false,
         });
-
-        port.pipe(parser);
-        console.log("connected to teensy on port", teensyPort.path)
-        serialAbortController.abort()
-
-        port.on('error', (err) => {
-            console.error("unknown error")
-        });
-
-        port.on('close', (err) => {
-            console.error("Teensy was dissconected, trying to reconnect");
-            teensyPort = null
-            setTimeout(() => {
-                getSerialPort()
-            }, teensyCheckInterval)
-        });
     }catch(err){
         setTimeout(() => {
             getSerialPort()
         }, teensyCheckInterval)
+        return;
     }
+    port.pipe(parser);
+    console.log("connected to teensy on port", teensyPort.path)
+    serialAbortController.abort()
+    showSerialError = false
+
+    port.on('error', (err) => {
+        console.error("unknown error")
+    });
+
+    port.on('close', (err) => {
+        console.error("Teensy was dissconected, trying to reconnect");
+        //bug dieses dialog fenster wird nicht gezeigt
+        dialog.showMessageBox(mainWindow,{signal:serialAbortController.signal, message:"Module nicht verbunden.", type:"warning", title:"FEHLER-006"})
+        teensyPort = null
+        setTimeout(() => {
+            getSerialPort()
+        }, teensyCheckInterval)
+    });
 }
 
 parser.on('data', function(data) {

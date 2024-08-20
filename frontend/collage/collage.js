@@ -9,13 +9,16 @@ let zOrder = [0,1,2,null,null,null]
 
 function setup(){
     createCanvas(windowWidth, windowHeight)
+    loop()
     background(0);
-    blendModes = [BLEND, DIFFERENCE, SCREEN, BURN]
     angleMode(DEGREES)
 }
 
 function draw(){
     background(0)
+    if(!dataAssigned){
+        return
+    }
     blendMode(BLEND)
     if(myBackground.isOn){
         drawSurface(myBackground)
