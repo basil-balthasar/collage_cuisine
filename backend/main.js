@@ -8,6 +8,8 @@ const fs = require("fs");
 
 const {autoUpdater, AppUpdater} = require("electron-updater");
 
+const abort = new AbortController()
+
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 
@@ -17,7 +19,7 @@ const { error, info, Console } = require("console");
 const parsers = SerialPort.parsers;
 const parser = new ReadlineParser({ delimeter: "\r\n" });
 
-const fileName = 'test2.png'
+let fileName = 'test2.png'
 
 let teensyPort;
 let mainWindow;
@@ -70,6 +72,7 @@ function createDiaWindow(){
 
 app.whenReady().then(()=>{
     mainWindow = createMainWindow();
+    getSerialPort()
     diaWindow = createDiaWindow();
     autoUpdater.checkForUpdates();
     mainWindow.webContents.send("updateStatus", "checking for update")
@@ -97,8 +100,6 @@ autoUpdater.on("error", (info)=>{
 //   if (process.platform !== 'darwin') app.quit()
 // })
 
-getSerialPort()
-
 async function getSerialPort(){
     await SerialPort.list().then((ports, err) => {
     if(err) {
@@ -116,7 +117,7 @@ async function getSerialPort(){
     });
     if(teensyPort == null){
         console.error("Teensy not connected, will try again")
-        //dialog.showErrorBox("Teensy not connected", "check USB connection to teensy and press ok to try again")
+        dialog.showMessageBox(mainWindow,{signal:abort.signal, message:"Module nicht verbunden.", type:"warning", title:"FEHLER-006"})
     }
     openPort()
   })
@@ -135,6 +136,7 @@ function openPort(){
 
         port.pipe(parser);
         console.log("connected to teensy on port", teensyPort.path)
+        abort.abort()
 
         port.on('error', (err) => {
             console.error("unknown error")
