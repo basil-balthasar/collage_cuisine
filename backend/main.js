@@ -54,7 +54,8 @@ function createDiaWindow(){
         fullscreen: false,
         webPreferences:{
             contextIsolation: true,
-            nodeIntegration: true
+            nodeIntegration: true,
+            preload: path.join(__dirname, "../frontend/collage/preload.js")
         }
     })
 
