@@ -67,7 +67,6 @@ app.whenReady().then(()=>{
     mainWindow.webContents.send("updateStatus", "checking for update")
 
     getSerialPort()
-    getImageURL();
 });
 
 autoUpdater.on("update-available", (info) => {
@@ -190,8 +189,22 @@ function saveImage(){
     })
 }
 
-//Supabase
+function startSave() {
+    uploadCollage();
+    ipcMain.handle('fileNames', () => getFileNames()); //if upload succcessful update list for diashow
+    ipcMain.handle('qrLink', () => getImageURL()); //if upload succcessful get URL for QR code
+}
 
+
+//get image names
+function getFileNames() {
+    const directoryPath = 'backend/screenshots';
+    return fs.readdirSync(directoryPath);
+}
+
+//-----Supabase-----//
+
+//uploads file to Supabase
 async function uploadCollage() {
     try {
         const storageFilePath = 'collages/' + fileName;
@@ -206,13 +219,14 @@ async function uploadCollage() {
         if (error) {
             console.error("Error uploading file:", error);
         } else {
-            console.log("File data:", data);
+            console.log("File data uploaded:", data);
         }
     } catch (error) {
         console.error("An unexpected error occurred while uploading screenshot:", error);
     }
 }
 
+// returns URL from img on Supabase
 async function getImageURL() {
     try {
         const storageFilePath = 'collages/' + fileName;
@@ -223,7 +237,9 @@ async function getImageURL() {
         if (error) {
             console.error("Error fetching ImageURL:", error);
         } else {
-            console.log("ImageURL:", data);
+            const imageURL = data.publicUrl;
+            console.log("ImageURL:", imageURL);
+            return imageURL;
         }
     } catch (error) {
         console.error("An unexpected error occurred while fetching ImageURL:", err);
