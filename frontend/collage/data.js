@@ -1,3 +1,5 @@
+let dataAssigned = false
+
 window.bridge.data((event, data)=>{
     readData(data)
 })
@@ -59,6 +61,8 @@ function readData(data){
         layerTwoRotation,
         layerTwoJoystick,
         layerTwoBlendModes);
+
+        dataAssigned = true
 }
 
 function assignSurfaceData(data, layer, images, isOn, image, scale, joystick){

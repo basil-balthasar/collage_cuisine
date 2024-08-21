@@ -1,93 +1,97 @@
-require('dotenv').config();
-const supabase = require("./config/supabaseClient.js");
-
 const {app, BrowserWindow, ipcMain, webContents, ipcRenderer, dialog} = require("electron");
+const {autoUpdater, AppUpdater} = require("electron-updater");
+
 const url = require("url");
 const path = require("path");
 const fs = require("fs");
 
-const {autoUpdater, AppUpdater} = require("electron-updater");
-
-autoUpdater.autoDownload = false;
-autoUpdater.autoInstallOnAppQuit = true;
+require('dotenv').config();
+const supabase = require("./config/supabaseClient.js");
 
 const {SerialPort} = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
 const { error, info, Console } = require("console");
+const { sign } = require("crypto");
+const { title } = require("process");
 const parsers = SerialPort.parsers;
 const parser = new ReadlineParser({ delimeter: "\r\n" });
 
-const fileName = 'test5.png'
-
-let teensyPort;
-let mainWindow;
-let diaWindow
-
-function createMainWindow(){
-    const mainWindow = new BrowserWindow({
-        title: "Collage Cuisine",
-        width: 1000,
-        height: 600,
-        fullscreen: false,
-        webPreferences:{
-            contextIsolation: true,
-            nodeIntegration: true,
-            preload: path.join(__dirname, "../frontend/collage/preload.js")
-        }
-    });
-
-    const startUrl = url.format({
-        pathname: path.join(__dirname, "../frontend/collage/index.html"),
-        protocol: "file"
-    });
-
-    mainWindow.loadURL(startUrl);
-
-    return mainWindow;
+let serialAbortController = new AbortController()
+const updateAbortController = new AbortController()
+const teensyNotConnected = {
+    signal: serialAbortController.signal,
+    type: "warning",
+    title: "FEHLER-006",
+    message: "FEHLER-006: Module nicht mit Computer verbunden.",
+    detail: "Bitte informieren Sie eine Museumsaufsicht."
 }
 
-function createDiaWindow(){
-    const diaWindow = new BrowserWindow({
-        title: "Diashow",
-        width: 500,
-        height: 300,
-        fullscreen: false,
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
+
+let fileName = 'test2.png'
+
+let teensyCheckInterval = 2000
+let showSerialError = false
+
+let mainWindow;
+let diaWindow;
+
+function createWindow(title, width, height, fullscreen, index, preload){
+    const newWindow = new BrowserWindow({
+        title: title,
+        width: width,
+        height: height,
+        fullscreen: fullscreen,
         webPreferences:{
             contextIsolation: true,
             nodeIntegration: true,
-            preload: path.join(__dirname, "../frontend/collage/preload.js")
+            preload: path.join(__dirname, preload)
         }
-    })
+    });
 
     const startUrl = url.format({
-        pathname: path.join(__dirname, "../frontend/diashow/dia.html"),
+        pathname: path.join(__dirname, index),
         protocol: "file"
     });
 
-    diaWindow.loadURL(startUrl);
+    newWindow.loadURL(startUrl);
 
-    return diaWindow;
+    return newWindow;
 }
 
 app.whenReady().then(()=>{
-    mainWindow = createMainWindow();
-    diaWindow = createDiaWindow();
+    mainWindow = createWindow("Collage Cuisine", 1000, 600, false, "../frontend/collage/index.html", "../frontend/collage/preload.js");
+    diaWindow = createWindow("Diashow", 300, 500, false, "../frontend/diashow/dia.html", "../frontend/diashow/preload.js");
     autoUpdater.checkForUpdates();
     mainWindow.webContents.send("updateStatus", "checking for update")
-    startSave();
+
+    getSerialPort()
 });
 
 autoUpdater.on("update-available", (info) => {
-    mainWindow.webContents.send("updateStatus", "Update avaiable")
-    autoUpdater.downloadUpdate();
+    mainWindow.webContents.send("updateStatus", "update avaiable")
+    if(process.platform == "win32"){
+        autoUpdater.downloadUpdate();
+    }else{
+        dialog.showMessageBox(mainWindow, {title: "Update avaiable", type:"info", message:"There is a newer version of this software avaiable on the github repo. Due to your current operating system you have to download it manually."})
+    }
 })
 
 autoUpdater.on("update-downloaded", (info)=>{
     mainWindow.webContents.send("updateStatus", "update downloaded")
+    dialog.showMessageBox(mainWindow, {signal:updateAbortController.signal, type:"info", title:"Update installiert", message:"Software aktualisiert auf version: "+ app.getVersion()})
+    setTimeout(()=>{
+        updateAbortController.abort()
+    },10000)
 })
 
 autoUpdater.on("error", (info)=>{
     mainWindow.webContents.send("updateStatus", info)
+    dialog.showMessageBox(mainWindow, {signal:updateAbortController.signal, type:"error", title:"Update fehlgeschlagen", message:info})
+    setTimeout(()=>{
+        updateAbortController.abort()
+    },10000)
 })
 
 
@@ -98,32 +102,35 @@ autoUpdater.on("error", (info)=>{
 //   if (process.platform !== 'darwin') app.quit()
 // })
 
-getSerialPort()
-
 async function getSerialPort(){
+    let teensyPort
     await SerialPort.list().then((ports, err) => {
     if(err) {
       console.error(err)
     }
 
     if (ports.length === 0) {
-      console.error("No ports avaiable")
+      console.error("ERROR: No ports avaiable")
     }
 
     ports.forEach(port => {
-        if(port.path.includes("usbmodem")){
+        if(port.path.includes("usbmodem")||port.path.includes("COM")){
             teensyPort = port
         }
     });
     if(teensyPort == null){
         console.error("Teensy not connected, will try again")
-        //dialog.showErrorBox("Teensy not connected", "check USB connection to teensy and press ok to try again")
+        if(!showSerialError){
+            dialog.showMessageBox(mainWindow, teensyNotConnected)
+            showSerialError = true;
+        }
     }
-    openPort()
+    openPort(teensyPort)
   })
 }
 
-function openPort(){
+function openPort(teensyPort){
+    let port
     try{
         port = new SerialPort({
             path: teensyPort.path,
@@ -133,25 +140,35 @@ function openPort(){
             stopBits: 1,
             flowControl: false,
         });
-
-        port.pipe(parser);
-        console.log("connected to teensy on port", teensyPort.path)
-
-        port.on('error', (err) => {
-            console.error("unknown error")
-        });
-            port.on('close', (err) => {
-            console.error("Teensy was dissconected, trying to reconnect");
-            teensyPort = null
-            setTimeout(() => {
-                getSerialPort()
-            }, 2000)
-        });
     }catch(err){
         setTimeout(() => {
             getSerialPort()
-        }, 2000)
+        }, teensyCheckInterval)
+        return;
     }
+    port.pipe(parser);
+    console.log("connected to teensy on port", teensyPort.path)
+    if(showSerialError){
+        serialAbortController.abort()
+        serialAbortController = new AbortController()
+        teensyNotConnected.signal = serialAbortController.signal
+        showSerialError = false
+    }
+
+    port.on('error', (err) => {
+        console.error("unknown error")
+    });
+
+    port.on('close', (err) => {
+        console.error("Teensy was dissconected, trying to reconnect");
+        //bug dieses dialog fenster wird nicht gezeigt
+        dialog.showMessageBox(mainWindow, teensyNotConnected)
+        showSerialError = true
+        teensyPort = null
+        setTimeout(() => {
+            getSerialPort()
+        }, teensyCheckInterval)
+    });
 }
 
 parser.on('data', function(data) {
