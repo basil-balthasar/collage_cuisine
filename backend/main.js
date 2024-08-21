@@ -12,11 +12,19 @@ const {SerialPort} = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
 const { error, info, Console } = require("console");
 const { sign } = require("crypto");
+const { title } = require("process");
 const parsers = SerialPort.parsers;
 const parser = new ReadlineParser({ delimeter: "\r\n" });
 
-const serialAbortController = new AbortController()
+let serialAbortController = new AbortController()
 const updateAbortController = new AbortController()
+const teensyNotConnected = {
+    signal: serialAbortController.signal,
+    type: "warning",
+    title: "FEHLER-006",
+    message: "FEHLER-006: Module nicht mit Computer verbunden.",
+    detail: "Bitte informieren Sie eine Museumsaufsicht."
+}
 
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
@@ -114,7 +122,7 @@ async function getSerialPort(){
     if(teensyPort == null){
         console.error("Teensy not connected, will try again")
         if(!showSerialError){
-            dialog.showMessageBox(mainWindow,{signal:serialAbortController.signal, message:"Module nicht verbunden.", type:"warning", title:"FEHLER-006"})
+            dialog.showMessageBox(mainWindow, teensyNotConnected)
             showSerialError = true;
         }
     }
@@ -141,8 +149,12 @@ function openPort(teensyPort){
     }
     port.pipe(parser);
     console.log("connected to teensy on port", teensyPort.path)
-    serialAbortController.abort()
-    showSerialError = false
+    if(showSerialError){
+        serialAbortController.abort()
+        serialAbortController = new AbortController()
+        teensyNotConnected.signal = serialAbortController.signal
+        showSerialError = false
+    }
 
     port.on('error', (err) => {
         console.error("unknown error")
@@ -151,7 +163,8 @@ function openPort(teensyPort){
     port.on('close', (err) => {
         console.error("Teensy was dissconected, trying to reconnect");
         //bug dieses dialog fenster wird nicht gezeigt
-        dialog.showMessageBox(mainWindow,{signal:serialAbortController.signal, message:"Module nicht verbunden.", type:"warning", title:"FEHLER-006"})
+        dialog.showMessageBox(mainWindow, teensyNotConnected)
+        showSerialError = true
         teensyPort = null
         setTimeout(() => {
             getSerialPort()
