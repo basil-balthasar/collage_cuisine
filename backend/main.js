@@ -61,11 +61,11 @@ function createWindow(title, width, height, fullscreen, index, preload){
 }
 
 app.whenReady().then(()=>{
-    mainWindow = createWindow("Collage Cuisine", 1000, 600, false, "../frontend/collage/index.html", "../frontend/collage/preload.js");
-    diaWindow = createWindow("Diashow", 300, 500, false, "../frontend/diashow/dia.html", "../frontend/diashow/preload.js");
+    mainWindow = createWindow("Collage Cuisine", 1000, 600, false, "../frontend/collage/index.html", "../frontend/preload.js");
+    diaWindow = createWindow("Diashow", 300, 500, false, "../frontend/diashow/dia.html", "../frontend/preload.js");
     autoUpdater.checkForUpdates();
     mainWindow.webContents.send("updateStatus", "checking for update")
-
+    startSave();
     getSerialPort()
 });
 
