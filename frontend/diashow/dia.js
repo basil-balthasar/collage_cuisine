@@ -1,30 +1,39 @@
-const screenshotNames = ["test2.png", "test3.png", "test4.png"];
+var screenshotNames = [];
 var image = document.getElementById('image');
-var imgIMG = document.getElementById('qrIMG');
+var qrIMG = document.getElementById('qrIMG');
 
-var link = screenshotNames[screenshotNames.length - 1];
+//-----Dia Show-----//
 
-//interval between images
-setInterval(changeImageSrc, 10000); 
+//retrieve all filenames in screenshot folder
+window.bridge.fileNames().then(fileNames => {
+    screenshotNames = fileNames;
+    console.log('files in dir:', screenshotNames)
+})
 
-generateQR();
-
+//change images
 function changeImageSrc() {
     const randomNr = Math.floor(Math.random() * screenshotNames.length);
-
-    // Start the fade-out effect
     image.style.opacity = 0;
     setTimeout(() => {
         image.src = "../../backend/screenshots/" + screenshotNames[randomNr];
         image.style.opacity = 1;
     }, 500); // duration of fade
 }
+setInterval(changeImageSrc, 10000); 
+
+//-----QR Code-----//
+
+//retrieve image URL
+window.bridge.qrLink().then(qrLink => {
+    console.log('QR code link:', qrLink)
+    generateQR(qrLink);
+})
 
 //generate QRcode via webAPI
-function generateQR() {
+function generateQR(link) {
     if (link) {
-        qrIMG.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://guuydhldgjexrbvozxeb.supabase.co/storage/v1/object/public/Collages/collages/" + link;
+        qrIMG.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + link;
     } else {
-        console.error("Link not defined");
+        console.error("Error. No QR link provided");
     }
 }
