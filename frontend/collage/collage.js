@@ -1,7 +1,7 @@
 let joystickSpeed = 3;
 let surfaceMaxScale = 2;
-let elementMinScale = 0.1;
-let elementMaxScale = 0.5;
+let elementMinScale = 0.05;
+let elementMaxScale = 0.3;
 let blendModes;
 let backgroundColor
 
