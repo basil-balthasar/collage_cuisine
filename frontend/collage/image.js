@@ -1,4 +1,4 @@
-let numberOfImages = [6, 0, 15, 15]
+let numberOfImages = [8, 13, 15, 15]
 
 class ImageObject{
     constructor(isOn, image, position, scale, rotation, blendMode){

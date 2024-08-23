@@ -30,6 +30,7 @@ function draw(){
         switch(zOrder[l]){
             case 0:
                 if(foreground.isOn == true){
+                    blendMode(BLEND)
                     drawSurface(foreground);
                 }
                 break;
@@ -53,17 +54,9 @@ function draw(){
 
 function drawSurface(layer){
     imageMode(CORNER)
-    if(layer.image.width >= layer.image.height){
-        image(layer.image, 0, 0, windowWidth, windowHeight,
-        layer.position.x, layer.position.y,
-        layer.image.width/layer.scale, layer.image.height/layer.scale, COVER);
-    }else{
-        image(layer.image,
-        layer.position.x,
-        layer.position.y,
-        width*layer.scale,
-        width*layer.image.height/layer.image.width*layer.scale); //this calculation only works for images that are wider than the display screen
-    }
+    image(layer.image, 0, 0, windowWidth, windowHeight,
+    layer.position.x, layer.position.y,
+    layer.image.width/layer.scale, layer.image.height/layer.scale, COVER);
 }
 
 function drawElement(layer){
