@@ -189,8 +189,8 @@ function saveImage(){
     })
 }
 
-function startSave() {
-    uploadCollage();
+async function startSave() {
+    await uploadCollage();
     ipcMain.handle('fileNames', () => getFileNames()); //if upload succcessful update list for diashow
     ipcMain.handle('qrLink', () => getImageURL()); //if upload succcessful get URL for QR code
 }
