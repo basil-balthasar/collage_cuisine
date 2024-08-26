@@ -179,7 +179,7 @@ ipcMain.handle("saveImage",()=>{
     saveImage()
 })
 
-function saveImage(){
+async function saveImage(){
     if(waitForSafe){
         return;
     }
@@ -207,7 +207,7 @@ function saveImage(){
         })
     })
 
-    uploadCollage(filename)
+    await uploadCollage(filename)
 
     waitForSafe = true
 
