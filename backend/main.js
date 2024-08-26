@@ -37,6 +37,8 @@ let waitForSafe = false
 let mainWindow;
 let diaWindow;
 
+let filename;
+
 function createWindow(title, width, height, fullscreen, index, preload){
     const newWindow = new BrowserWindow({
         title: title,
@@ -186,7 +188,7 @@ async function saveImage(){
 
     let date = new Date()
 
-    let filename =
+    filename =
     "Collage-" +
     (date.getFullYear() + 1) +
     "-" +
@@ -204,7 +206,7 @@ async function saveImage(){
         fs.writeFile("./backend/screenshots/"+filename+".png", img.toPNG(), "base64", function(err){
             if(err) throw err;
             console.log("saved")
-            uploadCollage(filename)
+            uploadCollage()
         })
     })
 
@@ -228,7 +230,7 @@ function getFileNames() {
 //-----Supabase-----//
 
 //uploads file to Supabase
-async function uploadCollage(filename) {
+async function uploadCollage() {
     try {
         const storageFilePath = 'collages/' + filename;
         const collageFileBuffer = fs.readFileSync('./backend/screenshots/' + filename + ".png");
@@ -250,7 +252,7 @@ async function uploadCollage(filename) {
 }
 
 // returns URL from img on Supabase
-async function getImageURL(filename) {
+async function getImageURL() {
     try {
         const storageFilePath = 'collages/' + filename;
         const { data , error } = supabase
