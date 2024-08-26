@@ -210,6 +210,8 @@ async function saveImage(){
         })
     })
 
+    diaWindow.webContents.send("qrLink", await getImageURL())
+
     waitForSafe = true
 
     setTimeout(()=>{
@@ -218,7 +220,6 @@ async function saveImage(){
 }
 
 ipcMain.handle('fileNames', () => getFileNames()); //if upload succcessful update list for diashow
-ipcMain.handle('qrLink', () => getImageURL()); //if upload succcessful get URL for QR code
 
 
 //get image names

@@ -23,11 +23,16 @@ setInterval(changeImageSrc, 10000);
 
 //-----QR Code-----//
 
-//retrieve image URL
-window.bridge.qrLink().then(qrLink => {
+window.bridge.qrLink((event, qrLink)=>{
     console.log('QR code link:', qrLink)
     generateQR(qrLink);
 })
+
+//retrieve image URL
+// window.bridge.qrLink().then(qrLink => {
+//     console.log('QR code link:', qrLink)
+//     generateQR(qrLink);
+// })
 
 //generate QRcode via webAPI
 function generateQR(link) {

@@ -5,7 +5,7 @@ let bridge = {
     updateStatus: (callback) => ipcRenderer.on("updateStatus", (callback)),
     saveImage: () => ipcRenderer.invoke("saveImage"),
     fileNames: () => ipcRenderer.invoke("fileNames"),
-    qrLink: () => ipcRenderer.invoke("qrLink")
+    qrLink: (callback) => ipcRenderer.on("qrLink", (callback))
 };
 
 contextBridge.exposeInMainWorld("bridge", bridge)
