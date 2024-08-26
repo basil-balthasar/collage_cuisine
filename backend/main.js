@@ -201,13 +201,12 @@ async function saveImage(){
     date.getSeconds();
 
     mainWindow.webContents.capturePage().then((img)=>{
-        fs.writeFile("./"+filename+".png", img.toPNG(), "base64", function(err){
+        fs.writeFile("./backend/screenshots/"+filename+".png", img.toPNG(), "base64", function(err){
             if(err) throw err;
             console.log("saved")
+            uploadCollage(filename)
         })
     })
-
-    await uploadCollage(filename)
 
     waitForSafe = true
 
@@ -232,7 +231,7 @@ function getFileNames() {
 async function uploadCollage(filename) {
     try {
         const storageFilePath = 'collages/' + filename;
-        const collageFileBuffer = fs.readFileSync('backend/screenshots/' + filename);
+        const collageFileBuffer = fs.readFileSync('./backend/screenshots/' + filename + ".png");
         const { data, error } = await supabase
         .storage
         .from('Collages')
