@@ -5,6 +5,10 @@ window.bridge.data((event, data)=>{
 })
 
 function readData(data){
+    if(data[saveButton]==0){
+        window.bridge.saveImage()
+    }
+
     let r = map(data[backgroundRGB[0]], 0, 1023, 0, 255)
     let g = map(data[backgroundRGB[1]], 0, 1023, 0, 255)
     let b = map(data[backgroundRGB[2]], 0, 1023, 0, 255)

@@ -29,10 +29,10 @@ const teensyNotConnected = {
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 
-let fileName = 'test2.png'
-
 let teensyCheckInterval = 2000
 let showSerialError = false
+
+let waitForSafe = false
 
 let mainWindow;
 let diaWindow;
@@ -65,7 +65,6 @@ app.whenReady().then(()=>{
     diaWindow = createWindow("Diashow", 300, 500, false, "../frontend/diashow/dia.html", "../frontend/preload.js");
     autoUpdater.checkForUpdates();
     mainWindow.webContents.send("updateStatus", "checking for update")
-    startSave();
     getSerialPort()
 });
 
@@ -177,23 +176,48 @@ parser.on('data', function(data) {
 });
 
 ipcMain.handle("saveImage",()=>{
-    console.log("saved image")
+    saveImage()
 })
 
 function saveImage(){
+    if(waitForSafe){
+        return;
+    }
+
+    let date = new Date()
+
+    let filename =
+    "Collage-" +
+    (date.getFullYear() + 1) +
+    "-" +
+    date.getMonth() +
+    "-" +
+    date.getDate() +
+    "-"+
+    date.getHours()+
+    "-" +
+    date.getMinutes() +
+    "-" +
+    date.getSeconds();
+
     mainWindow.webContents.capturePage().then((img)=>{
-        fs.writeFile("./image.png", img.toPNG(), "base64", function(err){
+        fs.writeFile("./"+filename+".png", img.toPNG(), "base64", function(err){
             if(err) throw err;
             console.log("saved")
         })
     })
+
+    uploadCollage(filename)
+
+    waitForSafe = true
+
+    setTimeout(()=>{
+        waitForSafe = false
+    }, 3000)
 }
 
-function startSave() {
-    uploadCollage();
-    ipcMain.handle('fileNames', () => getFileNames()); //if upload succcessful update list for diashow
-    ipcMain.handle('qrLink', () => getImageURL()); //if upload succcessful get URL for QR code
-}
+ipcMain.handle('fileNames', () => getFileNames()); //if upload succcessful update list for diashow
+ipcMain.handle('qrLink', () => getImageURL()); //if upload succcessful get URL for QR code
 
 
 //get image names
@@ -205,10 +229,10 @@ function getFileNames() {
 //-----Supabase-----//
 
 //uploads file to Supabase
-async function uploadCollage() {
+async function uploadCollage(filename) {
     try {
-        const storageFilePath = 'collages/' + fileName;
-        const collageFileBuffer = fs.readFileSync('backend/screenshots/' + fileName);
+        const storageFilePath = 'collages/' + filename;
+        const collageFileBuffer = fs.readFileSync('backend/screenshots/' + filename);
         const { data, error } = await supabase
         .storage
         .from('Collages')
@@ -227,9 +251,9 @@ async function uploadCollage() {
 }
 
 // returns URL from img on Supabase
-async function getImageURL() {
+async function getImageURL(filename) {
     try {
-        const storageFilePath = 'collages/' + fileName;
+        const storageFilePath = 'collages/' + filename;
         const { data , error } = supabase
         .storage
         .from('Collages')

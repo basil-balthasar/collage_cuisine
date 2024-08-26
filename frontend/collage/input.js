@@ -1,3 +1,6 @@
+/*This file is for mapping the input values from the teensy to 
+*/
+
 let layerData = [0, 1, 2];
 
 let backgroundIsOn = 3;
@@ -24,3 +27,5 @@ let layerTwoScale = 33;
 let layerTwoRotation = 34;
 let layerTwoJoystick = [35, 36, 37, 38];
 let layerTwoBlendModes = [39, 40, 41];
+
+let saveButton = 42;
