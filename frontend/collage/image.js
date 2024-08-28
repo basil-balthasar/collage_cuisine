@@ -1,4 +1,11 @@
 let numberOfImages = [8, 13, 15, 15]
+let totalImages = ()=>{
+    let t = 0
+    for(let l = 0; l > numberOfImages.length; l++){
+        t++
+    }
+}
+let loadedImage = 0
 
 class ImageObject{
     constructor(isOn, image, position, scale, rotation, blendMode){
@@ -21,8 +28,9 @@ let foregroundImages = [];
 let layerOneImages = [];
 let layerTwoImages = [];
 
-function preload(){
+async function preload(){
     blendModes = [BLEND, DIFFERENCE, SCREEN, BURN]
+
     for(let b = 0; b<numberOfImages[0]; b++){
         backgroundImages[b] = loadImage("./content/collageElements/BG/"+b+".webp")
     }
@@ -39,4 +47,9 @@ function preload(){
     foreground = new ImageObject(true, foregroundImages[0], createVector(0,0), 1.0, 0.0, 0);
     layerOne = new ImageObject(true, layerOneImages[0], createVector(0,0), 0.1, 45.0, 0);
     layerTwo = new ImageObject(true, layerTwoImages[0], createVector(0,0), 1.0, 0.0, 0);
+}
+
+function updateLoader(){
+    loadedImage++
+    console.log(loadedImage+1)
 }
