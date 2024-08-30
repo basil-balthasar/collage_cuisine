@@ -29,12 +29,9 @@ p {
 
 .loading {
   width: 16vw;
-  border-width: 4px;
-  border-style: none;
-  border-radius: 15px;
+  border-radius: 10px;
   border-color: black;
   background-color: white;
-  /* filter: drop-shadow(1px 2px 3px #ffffff); */
   margin: 20px 0px 0px 0px;
   padding: 2vw;
   justify-content: center;
@@ -46,13 +43,14 @@ p {
 }
 
 .QRCode {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
   top: 35%;
   left: 37%;
   width: 20vw;
   height: auto;
   position: absolute;
-  backdrop-filter: blur(10px);
-  background-color: rgba(32, 32, 32, 0.5);
+  background-color: rgb(171, 103, 238);
   border-radius: 20px;
   padding: 40px 3vw 3vw 3vw;
   display: flex;
@@ -61,39 +59,52 @@ p {
   align-items: center;
 }
 
-h4{
+h4 {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
 }
 
-.loader_container{
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.loader-container {
+  width: 100%;
+  height: 10px;
+  background-color: #cccccc00;
+  position: relative;
+  overflow: hidden;
 }
 
-.loader {
-  width: 40px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #f03355;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  animation: l1 2s infinite cubic-bezier(0.3, 1, 0, 1);
+.loader-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #540374;
+  position: absolute;
+  left: 0;
+  top: 0;
+  animation: fill 7s linear forwards;
 }
 
-@keyframes l1 {
-  33% {
-    border-radius: 0;
-    background: #514b82;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%)
+@keyframes fill {
+  0% {
+    width: 0%;
   }
+  100% {
+    width: 100%;
+  }
+}
 
-  66% {
-    border-radius: 0;
-    background: #ffa516;
-    clip-path: polygon(50% 0, 50% 0, 100% 100%, 0 100%)
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  animation: fadeOut 0.5s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
   }
 }

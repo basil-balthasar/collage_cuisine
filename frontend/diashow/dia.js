@@ -1,6 +1,5 @@
 var screenshotNames = [];
 var image = document.getElementById('image');
-var qrIMG = document.getElementById('qrIMG');
 
 //-----Dia Show-----//
 
@@ -20,25 +19,3 @@ function changeImageSrc() {
     }, 500); // duration of fade
 }
 setInterval(changeImageSrc, 10000); 
-
-//-----QR Code-----//
-
-window.bridge.qrLink((event, qrLink)=>{
-    console.log('QR code link:', qrLink)
-    generateQR(qrLink);
-})
-
-//retrieve image URL
-// window.bridge.qrLink().then(qrLink => {
-//     console.log('QR code link:', qrLink)
-//     generateQR(qrLink);
-// })
-
-//generate QRcode via webAPI
-function generateQR(link) {
-    if (link) {
-        qrIMG.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + link;
-    } else {
-        console.error("Error. No QR link provided");
-    }
-}
