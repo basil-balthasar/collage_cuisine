@@ -118,3 +118,25 @@ function joystickToPosition(joystick, position){
     position.x = constrain(position.x+=joystickInput[0]*joystickSpeed, 0, windowWidth);
     position.y = constrain(position.y+=joystickInput[1]*joystickSpeed, 0, windowHeight);
 }
+
+//-----QR Code-----//
+var qrIMG = document.getElementById('qrIMG');
+var qrCodeDiv = document.getElementById('QRCode');
+
+window.bridge.qrLink((event, qrLink)=>{
+    console.log('QR code link:', qrLink)
+    generateQR(qrLink);
+})
+
+//generate QRcode via webAPI
+function generateQR(link) {
+    if (link) {
+        qrCodeDiv.classList.add('fade-in');
+        qrIMG.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + link;
+        setTimeout(function() {
+            qrCodeDiv.classList.add('fade-out');
+        }, 7000);
+    } else {    
+        console.error("Error. No QR link provided");
+    }
+}
