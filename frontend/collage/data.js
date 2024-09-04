@@ -16,6 +16,8 @@ function readData(data){
     
     if(saveState != data[saveButton] && !saveCooldown){
         window.bridge.saveImage()
+        saveCooldown = true
+        console.log("savedImage")
     }
 
     let r = map(data[backgroundRGB[0]], 0, 1023, 0, 255)
