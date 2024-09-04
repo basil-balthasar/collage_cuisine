@@ -1,25 +1,19 @@
-var screenshotNames = [];
 var image = document.getElementById('image');
 
-var savePath = window.bridge.osFilePath().then(osFilePath => {
-    console.log(osFilePath)
-    return osFilePath
-})
+var savePath;
 
 //-----Dia Show-----//
 
-//retrieve all filenames in screenshot folder
-window.bridge.fileNames().then(fileNames => {
-    screenshotNames = fileNames;
-    console.log('files in dir:', screenshotNames)
+window.bridge.osFilePath().then(osFilePath => {
+    savePath = osFilePath;
 })
 
 //change images
 function changeImageSrc() {
-    const randomNr = Math.floor(Math.random() * screenshotNames.length);
+    console.log("theres the url" + savePath);
     image.style.opacity = 0;
     setTimeout(() => {
-        image.src = savePath + screenshotNames[randomNr];
+        image.src = savePath;
         image.style.opacity = 1;
     }, 500); // duration of fade
 }

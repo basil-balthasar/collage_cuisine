@@ -78,8 +78,7 @@ app.whenReady().then(()=>{
         savePath = os.homedir()+"\Desktop\Collagen\\"
     }
 
-    ipcMain.handle('osFilePath', () => savePath);
-
+    ipcMain.handle('osFilePath', () => getRandomImageURL());
     getSerialPort()
 });
 
@@ -262,10 +261,56 @@ async function getImageURL() {
         .from('Collages')
         .getPublicUrl(storageFilePath)
         if (error) {
-            console.error("Error fetching ImageURL:", error);
+            console.error("Error fetching QRImageURL:", error);
         } else {
             const imageURL = data.publicUrl;
-            console.log("ImageURL:", imageURL);
+            console.log("QRImageURL:", imageURL);
+            return imageURL;
+        }
+    } catch (error) {
+        console.error("An unexpected error occurred while fetching ImageURL:", err);
+    }
+}
+
+// returns random URL from img on Supabase
+async function getRandomName() {
+    try {
+        const { data, error } = await supabase
+            .storage
+            .from('Collages')
+            .list('collages', {
+            limit: 100,
+            offset: 0,
+            sortBy: { column: 'name', order: 'asc' },
+        })
+        if (error) {
+            console.error("Error fetching RandomImageName:", error);
+            return;
+        }
+
+        if (data && data.length > 0) {
+            // Pick a random file from the list
+            var randomFile = data[Math.floor(Math.random() * data.length)].name;
+            console.log("RandomFile:", randomFile);
+            return randomFile;
+        }
+    } catch (err) {
+        console.error("An unexpected error occurred while fetching RandomImageName:", err);
+    }
+}
+
+async function getRandomImageURL() {
+    try {
+        const storageFilePath = 'collages/' + await getRandomName();
+        const { data , error } = supabase
+        .storage
+        .from('Collages')
+        .getPublicUrl(storageFilePath)
+        if (error) {
+            console.error("Error fetching RandomImageURL:", error);
+        } else {
+            const imageURL = data.publicUrl;
+            console.log("RandomImageURL:", imageURL);
             return imageURL;
         }
     } catch (error) {
