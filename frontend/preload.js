@@ -5,6 +5,7 @@ let bridge = {
     updateStatus: (callback) => ipcRenderer.on("updateStatus", (callback)),
     saveImage: () => ipcRenderer.invoke("saveImage"),
     fileNames: () => ipcRenderer.invoke("fileNames"),
+    osFilePath: () => ipcRenderer.invoke("osFilePath"),
     qrLink: (callback) => ipcRenderer.on("qrLink", (callback))
 };
 

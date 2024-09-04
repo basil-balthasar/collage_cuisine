@@ -1,24 +1,32 @@
 let dataAssigned = false
-let saveCooldown = true
-let saveState = false
+let saveCooldown = false
+let saveState = 1
+let firstSave = true
 
 window.bridge.data((event, data)=>{
     readData(data)
 })
 
 function readData(data){
-    if(saveCooldown){
+    if(firstSave && data[saveButton] != undefined){
+        saveState = data[saveButton]
+        firstSave = false
+    }
+
+    if(saveState != data[saveButton] && !saveCooldown && data[saveButton] != undefined){
+        window.bridge.saveImage()
+        saveCooldown = true
         setTimeout(()=>{
             saveState = data[saveButton]
             saveCooldown = false
-        },3000)
+        },15000)
+        saveState = data[saveButton]
+    }
+
+    if(saveCooldown){
+        saveState = data[saveButton]
     }
     
-    if(saveState != data[saveButton] && !saveCooldown){
-        window.bridge.saveImage()
-        saveCooldown = true
-        console.log("savedImage")
-    }
 
     let r = map(data[backgroundRGB[0]], 1023, 0, 0, 255)
     let g = map(data[backgroundRGB[1]], 1023, 0, 0, 255)

@@ -1,6 +1,8 @@
 const {app, BrowserWindow, ipcMain, webContents, ipcRenderer, dialog} = require("electron");
 const {autoUpdater, AppUpdater} = require("electron-updater");
 
+const os = require("os");
+
 const url = require("url");
 const path = require("path");
 const fs = require("fs");
@@ -33,6 +35,7 @@ let teensyCheckInterval = 2000
 let showSerialError = false
 
 let waitForSafe = false
+let savePath
 
 let mainWindow;
 let diaWindow;
@@ -67,6 +70,16 @@ app.whenReady().then(()=>{
     diaWindow = createWindow("Diashow", 300, 500, false, "../frontend/diashow/dia.html", "../frontend/preload.js");
     autoUpdater.checkForUpdates();
     mainWindow.webContents.send("updateStatus", "checking for update")
+
+    if(process.platform == "darwin"){
+        savePath = os.homedir()+"/Desktop/Collagen/"
+    }
+    if(process.platform == "win32"){
+        savePath = os.homedir()+"\Desktop\Collagen\\"
+    }
+
+    ipcMain.handle('osFilePath', () => savePath);
+
     getSerialPort()
 });
 
@@ -182,10 +195,6 @@ ipcMain.handle("saveImage",()=>{
 })
 
 async function saveImage(){
-    if(waitForSafe){
-        return;
-    }
-
     let date = new Date()
 
     filename =
@@ -203,20 +212,13 @@ async function saveImage(){
     date.getSeconds();
 
     mainWindow.webContents.capturePage().then((img)=>{
-        fs.writeFile("./backend/screenshots/"+filename+".png", img.toPNG(), "base64", function(err){
+        fs.writeFile(savePath+filename+".png", img.toPNG(), "base64", function(err){
             if(err) throw err;
-            console.log("saved")
             uploadCollage()
         })
     })
 
     mainWindow.webContents.send("qrLink", await getImageURL())
-
-    waitForSafe = true
-
-    setTimeout(()=>{
-        waitForSafe = false
-    }, 3000)
 }
 
 ipcMain.handle('fileNames', () => getFileNames()); //if upload succcessful update list for diashow
@@ -224,8 +226,7 @@ ipcMain.handle('fileNames', () => getFileNames()); //if upload succcessful updat
 
 //get image names
 function getFileNames() {
-    const directoryPath = 'backend/screenshots';
-    return fs.readdirSync(directoryPath);
+    return fs.readdirSync(savePath);
 }
 
 //-----Supabase-----//
@@ -234,7 +235,7 @@ function getFileNames() {
 async function uploadCollage() {
     try {
         const storageFilePath = 'collages/' + filename;
-        const collageFileBuffer = fs.readFileSync('./backend/screenshots/' + filename + ".png");
+        const collageFileBuffer = fs.readFileSync(savePath + filename + ".png");
         const { data, error } = await supabase
         .storage
         .from('Collages')
