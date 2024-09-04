@@ -135,7 +135,7 @@ function openPort(teensyPort){
     try{
         port = new SerialPort({
             path: teensyPort.path,
-            baudRate: 9600,
+            baudRate: 115200,
             dataBits: 8,
             parity: "none",
             stopBits: 1,
@@ -157,7 +157,7 @@ function openPort(teensyPort){
     }
 
     port.on('error', (err) => {
-        console.error("unknown error")
+        console.error(err)
     });
 
     port.on('close', (err) => {
@@ -170,9 +170,14 @@ function openPort(teensyPort){
             getSerialPort()
         }, teensyCheckInterval)
     });
+
+    port.on('data', (data)=>{
+        console.log(data.toString())
+    })
 }
 
 parser.on('data', function(data) {
+    //console.log(data)
     data = data.split(",")
     mainWindow.webContents.send("data", data)
 });

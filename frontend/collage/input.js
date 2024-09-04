@@ -1,5 +1,4 @@
-/*This file is for mapping the input values from the teensy to 
-*/
+/*This file is for mapping the input values from the teensy to */
 
 let layerData = [0, 1, 2];
 
@@ -18,14 +17,14 @@ let layerOneIsOn = 20;
 let layerOneImage = 21;
 let layerOneScale = 22;
 let layerOneRotation = 23;
-let layerOneJoystick = [24, 25, 26, 27];
-let layerOneBlendModes = [28, 29, 30];
+let layerOneJoystick = [27, 24, 25, 26];
+let layerOneBlendModes = [28, 29, 30, 31];
 
-let layerTwoIsOn = 31;
-let layerTwoImage = 32;
-let layerTwoScale = 33;
-let layerTwoRotation = 34;
-let layerTwoJoystick = [35, 36, 37, 38];
-let layerTwoBlendModes = [39, 40, 41];
+let layerTwoIsOn = 32;
+let layerTwoImage = 33;
+let layerTwoScale = 34;
+let layerTwoRotation = 35;
+let layerTwoJoystick = [39, 36, 37, 38];
+let layerTwoBlendModes = [40, 41, 42, 43];
 
-let saveButton = 42;
+let saveButton = 44;

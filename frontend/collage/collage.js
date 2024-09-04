@@ -1,4 +1,4 @@
-let joystickSpeed = 3;
+let joystickSpeed = 5;
 let surfaceMaxScale = 2;
 let elementMinScale = 0.05;
 let elementMaxScale = 0.3;

@@ -1,11 +1,20 @@
 let dataAssigned = false
+let saveCooldown = true
+let saveState = false
 
 window.bridge.data((event, data)=>{
     readData(data)
 })
 
 function readData(data){
-    if(data[saveButton]==0){
+    if(saveCooldown){
+        setTimeout(()=>{
+            saveState = data[saveButton]
+            saveCooldown = false
+        },3000)
+    }
+    
+    if(saveState != data[saveButton] && !saveCooldown){
         window.bridge.saveImage()
     }
 
