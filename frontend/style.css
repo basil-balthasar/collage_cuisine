@@ -7,6 +7,7 @@ body {
   width: 100vw;
   height: 100vh;
   position: absolute;
+  object-fit: contain;
   transition: opacity 0.4s ease-in-out;
   opacity: 1;
 }
@@ -50,7 +51,7 @@ p {
   width: 20vw;
   height: auto;
   position: absolute;
-  background-color: rgb(171, 103, 238);
+  background-color: rgb(0, 0, 0);
   border-radius: 20px;
   padding: 40px 3vw 3vw 3vw;
   display: flex;
@@ -75,38 +76,20 @@ h4 {
 .qr-loader-bar {
   width: 0%;
   height: 100%;
-  background-color: #540374;
+  background-color: #000000;
   position: absolute;
   left: 0;
   top: 0;
-  animation: fill 7s linear forwards;
+  transition: all 0s ease-out;
 }
 
-@keyframes fill {
-  0% {
-    width: 0%;
-  }
-  100% {
-    width: 100%;
-  }
+.qr-fill {
+  width: 100%;
+  transition: all 15.5s ease-out;
 }
 
 .fade-in {
   opacity: 1;
-}
-
-.fade-out {
-  animation: fadeOut 0.5s ease-out forwards;
-}
-
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-    visibility: hidden;
-  }
 }
 
 .loader-container {
@@ -141,12 +124,12 @@ h4 {
   33% {
     border-radius: 0;
     background: #514b82;
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%)
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   }
 
   66% {
     border-radius: 0;
     background: #ffa516;
-    clip-path: polygon(50% 0, 50% 0, 100% 100%, 0 100%)
+    clip-path: polygon(50% 0, 50% 0, 100% 100%, 0 100%);
   }
 }

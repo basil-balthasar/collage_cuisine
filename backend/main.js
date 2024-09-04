@@ -170,14 +170,9 @@ function openPort(teensyPort){
             getSerialPort()
         }, teensyCheckInterval)
     });
-
-    port.on('data', (data)=>{
-        console.log(data.toString())
-    })
 }
 
 parser.on('data', function(data) {
-    //console.log(data)
     data = data.split(",")
     mainWindow.webContents.send("data", data)
 });
@@ -215,7 +210,7 @@ async function saveImage(){
         })
     })
 
-    diaWindow.webContents.send("qrLink", await getImageURL())
+    mainWindow.webContents.send("qrLink", await getImageURL())
 
     waitForSafe = true
 
