@@ -38,7 +38,7 @@ function readData(data){
             zOrder[2] = null;
         }
     }
-    console.log(zOrder)
+    //console.log(zOrder)
 
 
     assignSurfaceData(
@@ -125,9 +125,10 @@ function joystickToPosition(joystick, position){
 //-----QR Code-----//
 var qrIMG = document.getElementById('qrIMG');
 var qrCodeDiv = document.getElementById('QRCode');
+var qrLoader = document.getElementById('qr-loader-bar');
 
 window.bridge.qrLink((event, qrLink)=>{
-    console.log('QR code link:', qrLink)
+    console.log('got something from the bridge:', qrLink)
     generateQR(qrLink);
 })
 
@@ -135,10 +136,12 @@ window.bridge.qrLink((event, qrLink)=>{
 function generateQR(link) {
     if (link) {
         qrCodeDiv.classList.add('fade-in');
+        qrLoader.classList.add('qr-fill');
         qrIMG.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + link;
         setTimeout(function() {
-            qrCodeDiv.classList.add('fade-out');
-        }, 7000);
+            qrCodeDiv.classList.remove('fade-in');
+            qrLoader.classList.remove('qr-fill');
+        }, 15000);
     } else {    
         console.error("Error. No QR link provided");
     }
