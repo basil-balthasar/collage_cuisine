@@ -20,9 +20,9 @@ function readData(data){
         console.log("savedImage")
     }
 
-    let r = map(data[backgroundRGB[0]], 0, 1023, 0, 255)
-    let g = map(data[backgroundRGB[1]], 0, 1023, 0, 255)
-    let b = map(data[backgroundRGB[2]], 0, 1023, 0, 255)
+    let r = map(data[backgroundRGB[0]], 1023, 0, 0, 255)
+    let g = map(data[backgroundRGB[1]], 1023, 0, 0, 255)
+    let b = map(data[backgroundRGB[2]], 1023, 0, 0, 255)
     backgroundColor = color(r,g,b)
 
     zOrder = [0,1,2,null,null,null]

@@ -43,10 +43,10 @@ async function preload(){
     for(let t = 0; t<numberOfImages[3]; t++){
         layerTwoImages[t] = loadImage("./content/collageElements/TWO/"+t+".webp")
     }
-    myBackground = new ImageObject(true, backgroundImages[0], createVector(0,0) , 1.0, 0.0, 0);
-    foreground = new ImageObject(true, foregroundImages[0], createVector(0,0), 1.0, 0.0, 0);
-    layerOne = new ImageObject(true, layerOneImages[0], createVector(0,0), 0.1, 45.0, 0);
-    layerTwo = new ImageObject(true, layerTwoImages[0], createVector(0,0), 1.0, 0.0, 0);
+    myBackground = new ImageObject(true, backgroundImages[0], createVector(windowWidth/2,windowHeight/2) , 1.0, 0.0, 0);
+    foreground = new ImageObject(true, foregroundImages[0], createVector(windowWidth/2,windowHeight/2), 1.0, 0.0, 0);
+    layerOne = new ImageObject(true, layerOneImages[0], createVector(windowWidth/2,windowHeight/2), 0.1, 45.0, 0);
+    layerTwo = new ImageObject(true, layerTwoImages[0], createVector(windowWidth/2,windowHeight/2), 1.0, 0.0, 0);
 }
 
 function updateLoader(){
