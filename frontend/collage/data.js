@@ -25,13 +25,13 @@ function readData(data){
 
     zOrder = [0,1,2,null,null,null]
     for(let l = 0; l < layerData.length; l++){
-        if(data[layerData[l]] >= 0 && data[layerData[l]] <= 100){
+        if(data[layerData[l]] >= 40 && data[layerData[l]] <= 120){
             zOrder[3] = l;
             zOrder[l] = null;
-        }else if(data[layerData[l]] >= 500 && data[layerData[l]] <= 600){
+        }else if(data[layerData[l]] >= 121 && data[layerData[l]] <= 200){
             zOrder[4] = l;
             zOrder[l] = null;
-        }else if(data[layerData[l]] >= 900 && data[layerData[l]] <= 1000){
+        }else if(data[layerData[l]] >= 201 && data[layerData[l]] <= 300){
             zOrder[5] = l;
             zOrder[l] = null;
         }
