@@ -25,8 +25,8 @@ let savePathAbortController = new AbortController()
 const teensyNotConnected = {
     signal: serialAbortController.signal,
     type: "warning",
-    title: "FEHLER-006",
-    message: "FEHLER-006: Module nicht mit Computer verbunden.",
+    title: "Module nicht mit Computer verbunden",
+    message: "FEHLER-01: Module nicht mit Computer verbunden.",
     detail: "Bitte informieren Sie eine Museumsaufsicht."
 }
 
@@ -34,7 +34,7 @@ const diaWindowError = {
     signal: diaWindowAbortController.signal,
     type: "error",
     title: "Kein Zugriff zu online Bilder",
-    message: "FEHLER-03: Kein Zugriff zu online Bilder Datenbank",
+    message: "FEHLER-02: Kein Zugriff zu online Bilder Datenbank",
     detail: "Stellen Sie sicher, dass der Computer mit dem Internet verbunden ist. " + error.message
 }
 
@@ -42,7 +42,7 @@ const uploadError = {
     signal: updateAbortController.signal,
     type:"warning",
     title:"Bild konnte nicht hochgeladen werden",
-    message: "FEHLER-08: Bild konnte nicht hochgeladen werden",
+    message: "FEHLER-03: Bild konnte nicht hochgeladen werden",
     detail: "Stellen Sie sicher, dass der Computer mit dem Internet verbunden ist."
 }
 
@@ -50,7 +50,7 @@ const savePathError = {
     signal: savePathAbortController.signal,
     type: "error",
     title:"Kein Ordner Collagen auf Desktop",
-    message: "FEHLER-05: Kein Ordner 'Collagen' auf Desktop gefunden",
+    message: "FEHLER-04: Kein Ordner 'Collagen' auf Desktop gefunden",
     detail:"Bitte erstellen Sie einen Ordner mit dem Namen 'Collagen' auf dem Desktop"
 }
 
