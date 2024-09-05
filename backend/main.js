@@ -20,6 +20,8 @@ const parser = new ReadlineParser({ delimeter: "\r\n" });
 
 let serialAbortController = new AbortController()
 const updateAbortController = new AbortController()
+let diaWindowAbortController = new AbortController()
+let savePathAbortController = new AbortController()
 const teensyNotConnected = {
     signal: serialAbortController.signal,
     type: "warning",
@@ -212,7 +214,10 @@ async function saveImage(){
 
     mainWindow.webContents.capturePage().then((img)=>{
         fs.writeFile(savePath+filename+".png", img.toPNG(), "base64", function(err){
-            if(err) throw err;
+            if(err){
+                dialog.showMessageBox(mainWindow, {signal: savePathAbortController.signal, type: "error", title:"Kein Ordner Collagen auf Desktop", message: "FEHLER-05: Kein Ordner 'Collagen' auf Desktop gefunden", detail:"Bitte erstellen Sie einen Ordner mit dem Namen 'Collagen' auf dem Desktop"})  
+                throw err;
+            } 
             uploadCollage()
         })
     })
@@ -310,12 +315,16 @@ async function getRandomImageURL() {
         .getPublicUrl(storageFilePath)
         if (error) {
             console.error("Error fetching RandomImageURL:", error);
+            dialog.showMessageBox(diaWindow, {signal: diaWindowAbortController.signal, type: error, title: "Kein Zugriff zu online Bilder", message: "FEHLER-03: Kein Zugriff zu online Bilder Datenbank", detail: error})
         } else {
+            diaWindowAbortController.abort()
+            diaWindowAbortController = new AbortController
             const imageURL = data.publicUrl;
             console.log("RandomImageURL:", imageURL);
             return imageURL;
         }
     } catch (error) {
-        console.error("An unexpected error occurred while fetching ImageURL:", err);
+        console.error("An unexpected error occurred while fetching ImageURL:", error);
+        dialog.showMessageBox(diaWindow, {signal: diaWindowAbortController.signal, type: error, title: "Kein Zugriff zu online Bilder", message: "FEHLER-03: Kein Zugriff zu online Bilder Datenbank", detail: error})
     }
 }
