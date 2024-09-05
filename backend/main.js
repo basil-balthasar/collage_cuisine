@@ -299,6 +299,8 @@ async function getRandomName() {
     }
 }
 
+ipcMain.handle('getDiaPath', getRandomImageURL)
+
 async function getRandomImageURL() {
     try {
         const storageFilePath = 'collages/' + await getRandomName();
