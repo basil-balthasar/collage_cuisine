@@ -20,6 +20,9 @@
     "win": {
       "target": "nsis"
     },
+    "nsis": {
+      "perMachine": true
+    },
     "directories": {
       "output": "dist"
     }
