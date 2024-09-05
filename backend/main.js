@@ -112,13 +112,16 @@ autoUpdater.on("update-available", (info) => {
     if(process.platform == "win32"){
         autoUpdater.downloadUpdate();
     }else{
-        dialog.showMessageBox(mainWindow, {title: "Update avaiable", type:"info", message:"There is a newer version of this software avaiable on the github repo. Due to your current operating system you have to download it manually."})
+        dialog.showMessageBox(mainWindow, {title: "Update verfügbar", type:"info", message:"Update verfügbar", detail:"Es ist eine neue Version von 'Collage Cuisine' verfügbar. Aufgrund Ihres momentanen Betriebsystems muss diese manuell von GitHub heruntergeladen und installiert werden."})
+        setTimeout(()=>{
+            updateAbortController.abort()
+        },10000)
     }
 })
 
 autoUpdater.on("update-downloaded", (info)=>{
     mainWindow.webContents.send("updateStatus", "update downloaded")
-    dialog.showMessageBox(mainWindow, {signal:updateAbortController.signal, type:"info", title:"Update installiert", message:"Software aktualisiert auf version: "+ app.getVersion()})
+    dialog.showMessageBox(mainWindow, {signal:updateAbortController.signal, type:"info", title:"Update installiert", message:"Update installiert", detail:"Software aktualisiert auf version: "+ app.getVersion()})
     setTimeout(()=>{
         updateAbortController.abort()
     },10000)
@@ -126,7 +129,7 @@ autoUpdater.on("update-downloaded", (info)=>{
 
 autoUpdater.on("error", (info)=>{
     mainWindow.webContents.send("updateStatus", info)
-    dialog.showMessageBox(mainWindow, {signal:updateAbortController.signal, type:"error", title:"Update fehlgeschlagen", message:info})
+    dialog.showMessageBox(mainWindow, {signal:updateAbortController.signal, type:"error", title:"Update fehlgeschlagen", message:info.message})
     setTimeout(()=>{
         updateAbortController.abort()
     },10000)
