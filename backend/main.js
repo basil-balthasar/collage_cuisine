@@ -74,6 +74,7 @@ function createWindow(title, width, height, fullscreen, index, preload){
         width: width,
         height: height,
         fullscreen: fullscreen,
+        autoHideMenuBar: true,
         webPreferences:{
             contextIsolation: true,
             nodeIntegration: true,
@@ -92,7 +93,7 @@ function createWindow(title, width, height, fullscreen, index, preload){
 }
 
 app.whenReady().then(()=>{
-    mainWindow = createWindow("Collage Cuisine", 1000, 600, false, "../frontend/collage/index.html", "../frontend/preload.js");
+    mainWindow = createWindow("Collage Cuisine", 1000, 600, true, "../frontend/collage/index.html", "../frontend/preload.js");
     diaWindow = createWindow("Diashow", 300, 500, false, "../frontend/diashow/dia.html", "../frontend/preload.js");
     autoUpdater.checkForUpdates();
     mainWindow.webContents.send("updateStatus", "checking for update")
@@ -101,7 +102,7 @@ app.whenReady().then(()=>{
         savePath = os.homedir()+"/Desktop/Collagen/"
     }
     if(process.platform == "win32"){
-        savePath = os.homedir()+"\Desktop\Collagen\\"
+        savePath = os.homedir()+"\\Desktop\\Collagen\\"
     }
 
     ipcMain.handle('osFilePath', () => getRandomImageURL());
@@ -122,7 +123,7 @@ autoUpdater.on("update-available", (info) => {
 
 autoUpdater.on("update-downloaded", (info)=>{
     mainWindow.webContents.send("updateStatus", "update downloaded")
-    dialog.showMessageBox(mainWindow, {signal:updateAbortController.signal, type:"info", title:"Update installiert", message:"Update installiert", detail:"Software aktualisiert auf version: "+ app.getVersion()})
+    dialog.showMessageBox(mainWindow, {signal:updateAbortController.signal, type:"info", title:"Update installiert", message:"Update installiert", detail:"Software aktualisiert von Version: "+ app.getVersion() + "auf nächste"})
     setTimeout(()=>{
         updateAbortController.abort()
     },10000)
