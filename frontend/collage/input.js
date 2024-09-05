@@ -18,13 +18,13 @@ let layerOneImage = 21;
 let layerOneScale = 22;
 let layerOneRotation = 23;
 let layerOneJoystick = [27, 24, 25, 26];
-let layerOneBlendModes = [31, 28, 29, 30];
+let layerOneBlendModes = [30, 31, 29, 28];
 
 let layerTwoIsOn = 32;
 let layerTwoImage = 33;
 let layerTwoScale = 34;
 let layerTwoRotation = 35;
 let layerTwoJoystick = [39, 36, 37, 38];
-let layerTwoBlendModes = [43, 40, 41, 42];
+let layerTwoBlendModes = [42, 43, 41, 40];
 
 let saveButton = 44;

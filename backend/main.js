@@ -30,6 +30,29 @@ const teensyNotConnected = {
     detail: "Bitte informieren Sie eine Museumsaufsicht."
 }
 
+const diaWindowError = {
+    signal: diaWindowAbortController.signal,
+    type: "error",
+    title: "Kein Zugriff zu online Bilder",
+    message: "FEHLER-03: Kein Zugriff zu online Bilder Datenbank",
+    detail: "Stellen Sie sicher, dass der Computer mit dem Internet verbunden ist. " + error.message
+}
+
+const uploadError = {
+    signal: updateAbortController.signal,
+    type:"warning",
+    title:"Bild konnte nicht hochgeladen werden",
+    message: "FEHLER-08: Bild konnte nicht hochgeladen werden",
+    detail: "Stellen Sie sicher, dass der Computer mit dem Internet verbunden ist."
+}
+
+const savePathError = {signal: savePathAbortController.signal,
+    type: "error",
+    title:"Kein Ordner Collagen auf Desktop",
+    message: "FEHLER-05: Kein Ordner 'Collagen' auf Desktop gefunden",
+    detail:"Bitte erstellen Sie einen Ordner mit dem Namen 'Collagen' auf dem Desktop"
+}
+
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 
@@ -215,7 +238,7 @@ async function saveImage(){
     mainWindow.webContents.capturePage().then((img)=>{
         fs.writeFile(savePath+filename+".png", img.toPNG(), "base64", function(err){
             if(err){
-                dialog.showMessageBox(mainWindow, {signal: savePathAbortController.signal, type: "error", title:"Kein Ordner Collagen auf Desktop", message: "FEHLER-05: Kein Ordner 'Collagen' auf Desktop gefunden", detail:"Bitte erstellen Sie einen Ordner mit dem Namen 'Collagen' auf dem Desktop"})  
+                dialog.showMessageBox(mainWindow, savePathError)  
                 throw err;
             } 
             uploadCollage()
@@ -250,13 +273,18 @@ async function uploadCollage() {
         if (error) {
             console.error("Error uploading file:", error);
             let uploadAbortController = new AbortController()
-            dialog.showMessageBox(mainWindow, {signal: updateAbortController.signal, type:"warning", title:"Bild konnte nicht hochgeladen werden", message: "FEHLER-08: Bild konnte nicht hochgeladen werden", detail: "Stellen Sie sicher, dass der Computer mit dem Internet verbunden ist."})
+            dialog.showMessageBox(mainWindow, uploadError)
             setTimeout(()=>{
                 updateAbortController.abort()
             }, 10000)
         }
     } catch (error) {
         console.error("An unexpected error occurred while uploading screenshot:", error);
+        let uploadAbortController = new AbortController()
+        dialog.showMessageBox(mainWindow, uploadError)
+        setTimeout(()=>{
+            updateAbortController.abort()
+        }, 10000)
     }
 }
 
@@ -293,17 +321,21 @@ async function getRandomName() {
         })
         if (error) {
             console.error("Error fetching RandomImageName:", error);
+            dialog.showMessageBox(diaWindow, diaWindowError)
             return;
         }
 
         if (data && data.length > 0) {
             // Pick a random file from the list
+            diaWindowAbortController.abort()
+            diaWindowAbortController = new AbortController
             var randomFile = data[Math.floor(Math.random() * data.length)].name;
             console.log("RandomFile:", randomFile);
             return randomFile;
         }
     } catch (err) {
         console.error("An unexpected error occurred while fetching RandomImageName:", err);
+        dialog.showMessageBox(diaWindow, diaWindowError)
     }
 }
 
@@ -318,16 +350,14 @@ async function getRandomImageURL() {
         .getPublicUrl(storageFilePath)
         if (error) {
             console.error("Error fetching RandomImageURL:", error);
-            dialog.showMessageBox(diaWindow, {signal: diaWindowAbortController.signal, type: error, title: "Kein Zugriff zu online Bilder", message: "FEHLER-03: Kein Zugriff zu online Bilder Datenbank", detail: error})
+            dialog.showMessageBox(diaWindow, diaWindowError)
         } else {
-            diaWindowAbortController.abort()
-            diaWindowAbortController = new AbortController
             const imageURL = data.publicUrl;
             console.log("RandomImageURL:", imageURL);
             return imageURL;
         }
     } catch (error) {
         console.error("An unexpected error occurred while fetching ImageURL:", error);
-        dialog.showMessageBox(diaWindow, {signal: diaWindowAbortController.signal, type: error, title: "Kein Zugriff zu online Bilder", message: "FEHLER-03: Kein Zugriff zu online Bilder Datenbank", detail: error})
+        dialog.showMessageBox(diaWindow, diaWindowError)
     }
 }
