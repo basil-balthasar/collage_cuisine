@@ -46,7 +46,8 @@ const uploadError = {
     detail: "Stellen Sie sicher, dass der Computer mit dem Internet verbunden ist."
 }
 
-const savePathError = {signal: savePathAbortController.signal,
+const savePathError = {
+    signal: savePathAbortController.signal,
     type: "error",
     title:"Kein Ordner Collagen auf Desktop",
     message: "FEHLER-05: Kein Ordner 'Collagen' auf Desktop gefunden",
@@ -241,8 +242,8 @@ async function saveImage(){
     mainWindow.webContents.capturePage().then((img)=>{
         fs.writeFile(savePath+filename+".png", img.toPNG(), "base64", function(err){
             if(err){
-                dialog.showMessageBox(mainWindow, savePathError)  
-                throw err;
+                dialog.showMessageBox(mainWindow, savePathError)
+                return 
             } 
             uploadCollage()
         })
