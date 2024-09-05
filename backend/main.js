@@ -233,7 +233,7 @@ function getFileNames() {
     return fs.readdirSync(savePath);
 }
 
-//-----Supabase-----//
+//-----------Supabase-----------//
 
 //uploads file to Supabase
 async function uploadCollage() {
@@ -249,8 +249,11 @@ async function uploadCollage() {
         })
         if (error) {
             console.error("Error uploading file:", error);
-        } else {
-            console.log("File data uploaded:", data);
+            let uploadAbortController = new AbortController()
+            dialog.showMessageBox(mainWindow, {signal: updateAbortController.signal, type:"warning", title:"Bild konnte nicht hochgeladen werden", message: "FEHLER-08: Bild konnte nicht hochgeladen werden", detail: "Stellen Sie sicher, dass der Computer mit dem Internet verbunden ist."})
+            setTimeout(()=>{
+                updateAbortController.abort()
+            }, 10000)
         }
     } catch (error) {
         console.error("An unexpected error occurred while uploading screenshot:", error);
