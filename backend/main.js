@@ -15,6 +15,7 @@ const { ReadlineParser } = require("@serialport/parser-readline");
 const { error, info, Console } = require("console");
 const { sign } = require("crypto");
 const { title } = require("process");
+const { truncate } = require("node:original-fs");
 const parsers = SerialPort.parsers;
 const parser = new ReadlineParser({ delimeter: "\r\n" });
 
@@ -68,11 +69,13 @@ let diaWindow;
 
 let filename;
 
-function createWindow(title, width, height, fullscreen, index, preload){
+function createWindow(title, width, height, x, y, fullscreen, index, preload){
     const newWindow = new BrowserWindow({
         title: title,
         width: width,
         height: height,
+        x: x,
+        y: y,
         fullscreen: fullscreen,
         autoHideMenuBar: true,
         webPreferences:{
@@ -93,8 +96,8 @@ function createWindow(title, width, height, fullscreen, index, preload){
 }
 
 app.whenReady().then(()=>{
-    mainWindow = createWindow("Collage Cuisine", 1000, 600, true, "../frontend/collage/index.html", "../frontend/preload.js");
-    diaWindow = createWindow("Diashow", 300, 500, false, "../frontend/diashow/dia.html", "../frontend/preload.js");
+    mainWindow = createWindow("Collage Cuisine", 1000, 600, -2000, 50, true, "../frontend/collage/index.html", "../frontend/preload.js");
+    diaWindow = createWindow("Diashow", 300, 500, 100, 50, true, "../frontend/diashow/dia.html", "../frontend/preload.js");
     autoUpdater.checkForUpdates();
     mainWindow.webContents.send("updateStatus", "checking for update")
 
