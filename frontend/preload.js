@@ -1,6 +1,6 @@
 /*----------------------------------------------------
 This is the preload script attached to both of the
-windows. It can expose backand variables and APIs to
+windows. It can expose backend variables and APIs to
 the frontend windows
 ----------------------------------------------------*/
 
