@@ -1,4 +1,8 @@
-/*This file is for mapping the input values from the teensy to */
+/*----------------------------------------------------
+This file is for mapping the index of the incomming
+values from the teensy to a value that can be used in
+code to reference that index
+----------------------------------------------------*/
 
 let layerData = [0, 1, 2];
 

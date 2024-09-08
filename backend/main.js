@@ -1,3 +1,8 @@
+/*----------------------------------------------------
+This file is the first script that gets run
+when the app is launched and acts as the apps backend
+----------------------------------------------------*/
+
 //-----Electron-----//
 const {app, BrowserWindow, ipcMain, webContents, ipcRenderer, dialog} = require("electron");
 const {autoUpdater, AppUpdater} = require("electron-updater");

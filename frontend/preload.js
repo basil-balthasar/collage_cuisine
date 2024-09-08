@@ -1,3 +1,9 @@
+/*----------------------------------------------------
+This is the preload script attached to both of the
+windows. It can expose backand variables and APIs to
+the frontend windows
+----------------------------------------------------*/
+
 const {contextBridge, ipcRenderer, app} = require ("electron");
 
 let bridge = {

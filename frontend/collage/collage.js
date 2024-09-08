@@ -1,7 +1,15 @@
+/*----------------------------------------------------
+This file handles most of the actual drawing of
+content on the collage screen
+----------------------------------------------------*/
+
+//-----Adjustable variables-----//
 let joystickSpeed = 10;
 let surfaceMaxScale = 2;
 let elementMinScale = 0.05;
 let elementMaxScale = 0.3;
+
+
 let blendModes;
 let backgroundColor
 
@@ -52,6 +60,7 @@ function draw(){
     }
 }
 
+/*The background and foreground layer are referred to as surface layers*/
 function drawSurface(layer){
     imageMode(CORNER)
     image(layer.image, 0, 0, windowWidth, windowHeight,
@@ -59,6 +68,7 @@ function drawSurface(layer){
     layer.image.width/layer.scale, layer.image.height/layer.scale, COVER);
 }
 
+/*The other layers are referred to as element layers*/
 function drawElement(layer){
     imageMode(CENTER)
     push();
@@ -73,11 +83,3 @@ function drawElement(layer){
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
-
-// window.bridge.updateStatus((event, message)=>{
-//     console.log(message)
-// })
-
-// onkeydown = ()=>{
-//     window.bridge.saveImage()
-// }

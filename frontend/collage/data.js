@@ -1,8 +1,14 @@
+/*----------------------------------------------------
+This file maps the incomming data from the serialport
+to variables and the coresponding layer objects
+----------------------------------------------------*/
+
 let dataAssigned = false
 let saveCooldown = false
 let saveState = 1
 let firstSave = true
 
+/*Gets called everytime data is recieved and sent over the preload script*/
 window.bridge.data((event, data)=>{
     readData(data)
 })
@@ -46,7 +52,6 @@ function readData(data){
             zOrder[2] = null;
         }
     }
-    //console.log(zOrder)
 
 
     assignSurfaceData(
@@ -130,7 +135,9 @@ function joystickToPosition(joystick, position){
     position.y = constrain(position.y+=joystickInput[1]*joystickSpeed, 0, windowHeight);
 }
 
+
 //-----QR Code-----//
+
 var qrIMG = document.getElementById('qrIMG');
 var qrCodeDiv = document.getElementById('QRCode');
 var qrLoader = document.getElementById('qr-loader-bar');

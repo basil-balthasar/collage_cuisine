@@ -1,3 +1,8 @@
+/*----------------------------------------------------
+This file is responsible for the dia show on the
+second monitor
+----------------------------------------------------*/
+
 var image = document.getElementById('image');
 
 //-----Dia Show-----//
