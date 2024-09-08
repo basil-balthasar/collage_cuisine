@@ -109,7 +109,7 @@ function assignElementData(data, layer, images, isOn, image, scale, rotation, jo
         let joystickData = [data[joystick[0]], data[joystick[1]], data[joystick[2]], data[joystick[3]]];
         joystickToPosition(joystickData, layer.position);
         layer.scale = map(data[scale], 0, 1023, elementMinScale, elementMaxScale);
-        layer.rotation = map(data[rotation], 0, 1023, 0, 360);
+        layer.rotation = map(data[rotation], 1023, 0, 0, 360);
         if (data[blendModeData[0]] == 1 && data[blendModeData[1]] == 1 && data[blendModeData[2]] == 1) {
             layer.blendMode = blendModes[0];
         }else if(data[blendModeData[0]] == 0 && data[blendModeData[1]] == 1 && data[blendModeData[2]] == 1){
