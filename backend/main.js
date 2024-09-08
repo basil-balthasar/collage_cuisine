@@ -1,15 +1,18 @@
+//-----Electron-----//
 const {app, BrowserWindow, ipcMain, webContents, ipcRenderer, dialog} = require("electron");
 const {autoUpdater, AppUpdater} = require("electron-updater");
 
+//-----System/OS-----//
 const os = require("os");
-
 const url = require("url");
 const path = require("path");
 const fs = require("fs");
 
+//-----Supabase-----//
 require('dotenv').config();
 const supabase = require("./config/supabaseClient.js");
 
+//-----Serialport-----//
 const {SerialPort} = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
 const { error, info, Console } = require("console");
@@ -19,6 +22,7 @@ const { truncate } = require("node:original-fs");
 const parsers = SerialPort.parsers;
 const parser = new ReadlineParser({ delimeter: "\r\n" });
 
+//-----Error messages-----//
 let serialAbortController = new AbortController()
 const updateAbortController = new AbortController()
 let diaWindowAbortController = new AbortController()
@@ -55,9 +59,11 @@ const savePathError = {
     detail:"Bitte erstellen Sie einen Ordner mit dem Namen 'Collagen' auf dem Desktop"
 }
 
+//-----Autoupdate-----//
 autoUpdater.autoDownload = false;
 autoUpdater.autoInstallOnAppQuit = true;
 
+//-----variables-----//
 let teensyCheckInterval = 2000
 let showSerialError = false
 
@@ -69,6 +75,7 @@ let diaWindow;
 
 let filename;
 
+/* Returns a new Window with specified input parameters */
 function createWindow(title, width, height, x, y, fullscreen, index, preload){
     const newWindow = new BrowserWindow({
         title: title,
@@ -95,12 +102,17 @@ function createWindow(title, width, height, x, y, fullscreen, index, preload){
     return newWindow;
 }
 
+
+//-----App entry point-----//
+
+/*Is called when the programm starts – Entry point to the app*/
 app.whenReady().then(()=>{
     mainWindow = createWindow("Collage Cuisine", 1000, 600, -2000, 50, true, "../frontend/collage/index.html", "../frontend/preload.js");
     diaWindow = createWindow("Diashow", 300, 500, 100, 50, true, "../frontend/diashow/dia.html", "../frontend/preload.js");
     autoUpdater.checkForUpdates();
     mainWindow.webContents.send("updateStatus", "checking for update")
 
+    /*process.platform is the current os, darwin -> MacOs, win32 -> all windows OS also 64bit */
     if(process.platform == "darwin"){
         savePath = os.homedir()+"/Desktop/Collagen/"
     }
@@ -108,10 +120,17 @@ app.whenReady().then(()=>{
         savePath = os.homedir()+"\\Desktop\\Collagen\\"
     }
 
+    /*sends the current home path to the preload script*/
     ipcMain.handle('osFilePath', () => getRandomImageURL());
+
+    /*starts serial config*/
     getSerialPort()
 });
 
+
+//-----Autoupdate-----//
+
+/*Autoinstall update on windows, and inform about new update on macOS */
 autoUpdater.on("update-available", (info) => {
     mainWindow.webContents.send("updateStatus", "update avaiable")
     if(process.platform == "win32"){
@@ -124,6 +143,7 @@ autoUpdater.on("update-available", (info) => {
     }
 })
 
+/**Update downloaded message*/
 autoUpdater.on("update-downloaded", (info)=>{
     mainWindow.webContents.send("updateStatus", "update downloaded")
     dialog.showMessageBox(mainWindow, {signal:updateAbortController.signal, type:"info", title:"Update installiert", message:"Update installiert", detail:"Software aktualisiert von Version: "+ app.getVersion() + "auf nächste"})
@@ -132,6 +152,7 @@ autoUpdater.on("update-downloaded", (info)=>{
     },10000)
 })
 
+/*Download Error*/
 autoUpdater.on("error", (info)=>{
     mainWindow.webContents.send("updateStatus", info)
     dialog.showMessageBox(mainWindow, {signal:updateAbortController.signal, type:"error", title:"Update fehlgeschlagen", message:info.message})
@@ -148,6 +169,9 @@ autoUpdater.on("error", (info)=>{
 //   if (process.platform !== 'darwin') app.quit()
 // })
 
+
+//-----Serialport-----//
+
 async function getSerialPort(){
     let teensyPort
     await SerialPort.list().then((ports, err) => {
@@ -159,6 +183,7 @@ async function getSerialPort(){
       console.error("ERROR: No ports avaiable")
     }
 
+    /*Automatically connects to first port with "usbmodem" or "COM" in the name*/
     ports.forEach(port => {
         if(port.path.includes("usbmodem")||port.path.includes("COM")){
             teensyPort = port
@@ -217,10 +242,14 @@ function openPort(teensyPort){
     });
 }
 
+/*Gets called when port recieves data from the teensy*/
 parser.on('data', function(data) {
     data = data.split(",")
     mainWindow.webContents.send("data", data)
 });
+
+
+//-----Save image-----//
 
 ipcMain.handle("saveImage",()=>{
     saveImage()
@@ -243,6 +272,7 @@ async function saveImage(){
     "-" +
     date.getSeconds();
 
+    /*Takes a screenshot of the main window and saves it to a folder called "Collagen" on the desktop*/
     mainWindow.webContents.capturePage().then((img)=>{
         fs.writeFile(savePath+filename+".png", img.toPNG(), "base64", function(err){
             if(err){
@@ -252,19 +282,18 @@ async function saveImage(){
             uploadCollage()
         })
     })
-
     mainWindow.webContents.send("qrLink", await getImageURL())
 }
 
 ipcMain.handle('fileNames', () => getFileNames()); //if upload succcessful update list for diashow
-
 
 //get image names
 function getFileNames() {
     return fs.readdirSync(savePath);
 }
 
-//-----------Supabase-----------//
+
+//-----Supabase-----//
 
 //uploads file to Supabase
 async function uploadCollage() {
