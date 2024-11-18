@@ -19,6 +19,7 @@ h3 {
   font-size: 40px;
   color: rgb(255, 255, 255);
   margin: 0px;
+  text-align: center;
 }
 
 p {
@@ -27,6 +28,7 @@ p {
   font-weight: 100;
   color: rgb(255, 255, 255);
   margin: 8px 0px 10px 0px;
+  text-align: center;
 }
 
 .loading {

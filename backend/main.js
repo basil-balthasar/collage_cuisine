@@ -108,7 +108,6 @@ function createWindow(title, width, height, x, y, fullscreen, index, preload){
     return newWindow;
 }
 
-
 //-----App entry point-----//
 
 /*Is called when the programm starts – Entry point to the app*/
@@ -295,64 +294,37 @@ function getFileNames() {
 
 //uploads file to Supabase
 async function uploadCollage() {
-    if (getImageURL() !== true)  {   
-        try {
-            const storageFilePath = 'collages/' + filename;
-            const collageFileBuffer = fs.readFileSync(savePath + filename + ".png");
-            const { data, error } = await supabase
-            .storage
-            .from('Collages')
-            .upload(storageFilePath, collageFileBuffer, {
-                cacheControl: '3600',
-                upsert: false
-            })
-            if (error) {
-                console.error("Error uploading file:", error);
-                dialog.showMessageBox(mainWindow, uploadError)
-                setTimeout(()=>{
-                    updateAbortController.abort()
-                }, 10000)
-            }
-        } catch (error) {
-            console.error("An unexpected error occurred while uploading screenshot:", error);
-            dialog.showMessageBox(mainWindow, uploadError)
-            setTimeout(()=>{
-                updateAbortController.abort()
-            }, 10000)
-        }
-    } else {
-        try {
-            const storageFilePath = 'collages/' + filename;
-            const collageFileBuffer = fs.readFileSync(savePath + filename + ".png");
-            const { data, error } = await supabase
-            .storage
-            .from('Collages')
-            .update(storageFilePath, collageFileBuffer, {
-                cacheControl: '3600',
-                upsert: false
-            })
-            if (error) {
-                console.error("Error updating file:", error);
-                dialog.showMessageBox(mainWindow, uploadError)
-                setTimeout(()=>{
-                    updateAbortController.abort()
-                }, 10000)
-            }
-        } catch (error) {
-            console.error("An unexpected error occurred while updating screenshot:", error);
-            dialog.showMessageBox(mainWindow, uploadError)
-            setTimeout(()=>{
-                updateAbortController.abort()
-            }, 10000)
-        }
-    }
 
+    try {
+        const storageFilePath = 'collages/' + filename + ".png";
+        const collageFileBuffer = fs.readFileSync(savePath + filename + ".png");
+        const { data, error } = await supabase
+        .storage
+        .from('Collages')
+        .upload(storageFilePath, collageFileBuffer, {
+            cacheControl: '3600',
+            upsert: true
+        })
+        if (error) {
+            console.error("Error uploading file:", error);
+            dialog.showMessageBox(mainWindow, uploadError)
+            setTimeout(()=>{
+                updateAbortController.abort()
+            }, 10000)
+        }
+    } catch (error) {
+        console.error("An unexpected error occurred while uploading screenshot:", error);
+        dialog.showMessageBox(mainWindow, uploadError)
+        setTimeout(()=>{
+            updateAbortController.abort()
+        }, 10000)
+    }
 }
 
 // returns URL from img on Supabase
 async function getImageURL() {
     try {
-        const storageFilePath = 'collages/' + filename;
+        const storageFilePath = 'collages/' + filename + ".png";
         const { data , error } = supabase
         .storage
         .from('Collages')
@@ -361,7 +333,7 @@ async function getImageURL() {
             console.error("Error fetching QRImageURL:", error);
         } else {
             const imageURL = data.publicUrl;
-            console.log("QRImageURL:", imageURL);
+            console.log("QRImageURL:", imageURL, '.png');
             return imageURL;
         }
     } catch (error) {
@@ -369,42 +341,11 @@ async function getImageURL() {
     }
 }
 
-// returns random URL from img on Supabase
-async function getRandomName() {
-    try {
-        const { data, error } = await supabase
-            .storage
-            .from('Collages')
-            .list('collages', {
-            limit: 100,
-            offset: 0,
-            sortBy: { column: 'name', order: 'asc' },
-        })
-        if (error) {
-            console.error("Error fetching RandomImageName:", error);
-            dialog.showMessageBox(diaWindow, diaWindowError)
-            return;
-        }
-
-        if (data && data.length > 0) {
-            // Pick a random file from the list
-            diaWindowAbortController.abort()
-            diaWindowAbortController = new AbortController
-            var randomFile = data[Math.floor(Math.random() * data.length)].name;
-            console.log("RandomFile:", randomFile);
-            return randomFile;
-        }
-    } catch (err) {
-        console.error("An unexpected error occurred while fetching RandomImageName:", err);
-        dialog.showMessageBox(diaWindow, diaWindowError)
-    }
-}
-
 ipcMain.handle('getDiaPath', getRandomImageURL)
 
 async function getRandomImageURL() {
     try {
-        const storageFilePath = 'collages/' + await getRandomName();
+        const storageFilePath = 'collages/' + 'Collage-' + Math.floor(Math.random() * 51) + ".png";
         const { data , error } = supabase
         .storage
         .from('Collages')
