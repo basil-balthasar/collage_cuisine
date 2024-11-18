@@ -6,6 +6,7 @@ to variables and the coresponding layer objects
 let dataAssigned = false
 let saveCooldown = false
 let saveState = 1
+let saveFrameCount = 0
 let firstSave = true
 
 /*Gets called everytime data is recieved and sent over the preload script*/
@@ -19,14 +20,19 @@ function readData(data){
         firstSave = false
     }
 
-    if(saveState != data[saveButton] && !saveCooldown && data[saveButton] != undefined){
+    if(saveState != data[saveButton] && !saveCooldown && data[saveButton] != undefined && saveFrameCount >= 20){
         window.bridge.saveImage()
         saveCooldown = true
+        saveFrameCount = 0
         setTimeout(()=>{
             saveState = data[saveButton]
             saveCooldown = false
         },15000)
         saveState = data[saveButton]
+    }else if(saveState != data[saveButton] && !saveCooldown && data[saveButton] != undefined && saveFrameCount < 20){
+        saveFrameCount++
+    }else{
+        saveFrameCount = 0
     }
 
     if(saveCooldown){
