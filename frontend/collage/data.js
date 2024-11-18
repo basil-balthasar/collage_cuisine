@@ -15,28 +15,31 @@ window.bridge.data((event, data)=>{
 })
 
 function readData(data){
-    if(firstSave && data[saveButton] != undefined){
-        saveState = data[saveButton]
-        firstSave = false
-    }
 
-    if(saveState != data[saveButton] && !saveCooldown && data[saveButton] != undefined && saveFrameCount >= 20){
-        window.bridge.saveImage()
-        saveCooldown = true
-        saveFrameCount = 0
-        setTimeout(()=>{
+    //saving image logic
+    if(data[saveButton] != undefined){
+        if(firstSave){
             saveState = data[saveButton]
-            saveCooldown = false
-        },15000)
-        saveState = data[saveButton]
-    }else if(saveState != data[saveButton] && !saveCooldown && data[saveButton] != undefined && saveFrameCount < 20){
-        saveFrameCount++
-    }else{
-        saveFrameCount = 0
-    }
+            firstSave = false
+        }
 
-    if(saveCooldown){
-        saveState = data[saveButton]
+        if(saveCooldown){
+            saveState = data[saveButton]
+        }
+
+        if(saveState != data[saveButton] && !saveCooldown){
+            saveFrameCount++
+            if(saveFrameCount>=20){
+                window.bridge.saveImage()
+                saveCooldown = true
+                saveFrameCount = 0
+                saveState = data[saveButton]
+                setTimeout(()=>{
+                    saveCooldown = false
+                    saveState = data[saveButton]
+                },15000)
+            }
+        }
     }
     
 
