@@ -79,6 +79,7 @@ let mainWindow;
 let diaWindow;
 
 let filename;
+let nameCounter = Math.floor(Math.random() * 41);
 
 /* Returns a new Window with specified input parameters */
 function createWindow(title, width, height, x, y, fullscreen, index, preload){
@@ -261,21 +262,13 @@ ipcMain.handle("saveImage",()=>{
 })
 
 async function saveImage(){
-    let date = new Date()
 
-    filename =
-    "Collage-" +
-    (date.getFullYear() + 1) +
-    "-" +
-    date.getMonth() +
-    "-" +
-    date.getDate() +
-    "-"+
-    date.getHours()+
-    "-" +
-    date.getMinutes() +
-    "-" +
-    date.getSeconds();
+    filename = "Collage-" + nameCounter;
+    if(nameCounter <= 50){
+        nameCounter++
+    } else {    
+        nameCounter = 0
+    }
 
     /*Takes a screenshot of the main window and saves it to a folder called "Collagen" on the desktop*/
     mainWindow.webContents.capturePage().then((img)=>{
@@ -302,32 +295,58 @@ function getFileNames() {
 
 //uploads file to Supabase
 async function uploadCollage() {
-    try {
-        const storageFilePath = 'collages/' + filename;
-        const collageFileBuffer = fs.readFileSync(savePath + filename + ".png");
-        const { data, error } = await supabase
-        .storage
-        .from('Collages')
-        .upload(storageFilePath, collageFileBuffer, {
-            cacheControl: '3600',
-            upsert: false
-        })
-        if (error) {
-            console.error("Error uploading file:", error);
-            let uploadAbortController = new AbortController()
+    if (getImageURL() !== true)  {   
+        try {
+            const storageFilePath = 'collages/' + filename;
+            const collageFileBuffer = fs.readFileSync(savePath + filename + ".png");
+            const { data, error } = await supabase
+            .storage
+            .from('Collages')
+            .upload(storageFilePath, collageFileBuffer, {
+                cacheControl: '3600',
+                upsert: false
+            })
+            if (error) {
+                console.error("Error uploading file:", error);
+                dialog.showMessageBox(mainWindow, uploadError)
+                setTimeout(()=>{
+                    updateAbortController.abort()
+                }, 10000)
+            }
+        } catch (error) {
+            console.error("An unexpected error occurred while uploading screenshot:", error);
             dialog.showMessageBox(mainWindow, uploadError)
             setTimeout(()=>{
                 updateAbortController.abort()
             }, 10000)
         }
-    } catch (error) {
-        console.error("An unexpected error occurred while uploading screenshot:", error);
-        let uploadAbortController = new AbortController()
-        dialog.showMessageBox(mainWindow, uploadError)
-        setTimeout(()=>{
-            updateAbortController.abort()
-        }, 10000)
+    } else {
+        try {
+            const storageFilePath = 'collages/' + filename;
+            const collageFileBuffer = fs.readFileSync(savePath + filename + ".png");
+            const { data, error } = await supabase
+            .storage
+            .from('Collages')
+            .update(storageFilePath, collageFileBuffer, {
+                cacheControl: '3600',
+                upsert: false
+            })
+            if (error) {
+                console.error("Error updating file:", error);
+                dialog.showMessageBox(mainWindow, uploadError)
+                setTimeout(()=>{
+                    updateAbortController.abort()
+                }, 10000)
+            }
+        } catch (error) {
+            console.error("An unexpected error occurred while updating screenshot:", error);
+            dialog.showMessageBox(mainWindow, uploadError)
+            setTimeout(()=>{
+                updateAbortController.abort()
+            }, 10000)
+        }
     }
+
 }
 
 // returns URL from img on Supabase
