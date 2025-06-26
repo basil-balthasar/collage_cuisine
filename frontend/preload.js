@@ -12,7 +12,7 @@ let bridge = {
     saveImage: () => ipcRenderer.invoke("saveImage"),
     fileNames: () => ipcRenderer.invoke("fileNames"),
     qrLink: (callback) => ipcRenderer.on("qrLink", (callback)),
-    linkGenerating: (callback) => ipcRenderer.on("qrLink", (callback)),
+    linkGenerating: (callback) => ipcRenderer.on("linkGenerating", (callback)),
     getDiaPath: () => ipcRenderer.invoke("getDiaPath"),
     getAppVersion: () => ipcRenderer.invoke('get-app-version')
 };
