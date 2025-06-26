@@ -259,12 +259,21 @@ ipcMain.handle("saveImage",()=>{
 
 async function saveImage(){
 
-    filename = "Collage-" + nameCounter;
-    if(nameCounter < 50){
-        nameCounter++
-    } else {    
-        nameCounter = 0
-    }
+    let date = new Date()
+
+    filename =
+    "Collage-" +
+    (date.getFullYear() + 1) +
+    "-" +
+    date.getMonth() +
+    "-" +
+    date.getDate() +
+    "-"+
+    date.getHours()+
+    "-" +
+    date.getMinutes() +
+    "-" +
+    date.getSeconds();
 
     /*Takes a screenshot of the main window and saves it to a folder called "Collagen" on the desktop*/
     mainWindow.webContents.capturePage().then((img)=>{
@@ -293,7 +302,13 @@ function getFileNames() {
 async function uploadCollage() {
 
     try {
-        const storageFilePath = 'collages/' + filename + ".png";
+        let newFilename = "Collage-" + nameCounter;
+        if(nameCounter < 50){
+            nameCounter++
+        } else {    
+            nameCounter = 0
+        }
+        const storageFilePath = 'collages/' + newFilename + ".png";
         const collageFileBuffer = fs.readFileSync(savePath + filename + ".png");
         const { data, error } = await supabase
         .storage
