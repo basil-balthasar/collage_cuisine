@@ -353,7 +353,7 @@ async function getImageURL() {
             console.error("Error fetching QRImageURL:", error);
         } else {
             const imageURL = data.publicUrl;
-            console.log("QRImageURL:", imageURL, '.png');
+            console.log("QRImageURL:", imageURL);
             return imageURL;
         }
     } catch (error) {
