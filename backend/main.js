@@ -293,7 +293,6 @@ async function saveImage(){
             uploadCollage()
         })
     })
-    mainWindow.webContents.send("qrLink", await getImageURL())
 }
 
 ipcMain.handle('fileNames', () => getFileNames()); //if upload succcessful update list for diashow
@@ -331,6 +330,7 @@ async function uploadCollage() {
                 updateAbortController.abort()
             }, 10000)
         }
+        mainWindow.webContents.send("qrLink", await getImageURL())
     } catch (error) {
         console.error("An unexpected error occurred while uploading screenshot:", error);
         dialog.showMessageBox(mainWindow, uploadError)
