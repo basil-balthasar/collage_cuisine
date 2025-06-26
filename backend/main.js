@@ -260,7 +260,7 @@ ipcMain.handle("saveImage",()=>{
 async function saveImage(){
 
     filename = "Collage-" + nameCounter;
-    if(nameCounter <= 50){
+    if(nameCounter < 50){
         nameCounter++
     } else {    
         nameCounter = 0
