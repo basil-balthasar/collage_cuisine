@@ -291,6 +291,7 @@ async function saveImage(){
                 return 
             } 
             uploadCollage()
+            mainWindow.webContents.send("linkGenerating")
         })
     })
 }
