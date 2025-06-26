@@ -79,6 +79,7 @@ let mainWindow;
 let diaWindow;
 
 let filename;
+let newFilename;
 let nameCounter = Math.floor(Math.random() * 41);
 
 /* Returns a new Window with specified input parameters */
@@ -302,7 +303,7 @@ function getFileNames() {
 async function uploadCollage() {
 
     try {
-        let newFilename = "Collage-" + nameCounter;
+        newFilename = "Collage-" + nameCounter;
         if(nameCounter < 50){
             nameCounter++
         } else {    
@@ -336,7 +337,7 @@ async function uploadCollage() {
 // returns URL from img on Supabase
 async function getImageURL() {
     try {
-        const storageFilePath = 'collages/' + filename + ".png";
+        const storageFilePath = 'collages/' + newFilename + ".png";
         const { data , error } = supabase
         .storage
         .from('Collages')
