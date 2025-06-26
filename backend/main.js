@@ -312,6 +312,11 @@ async function uploadCollage() {
     try {
         const storageFilePath = 'collages/' + newFilename + ".png";
         const collageFileBuffer = fs.readFileSync(savePath + filename + ".png");
+
+        await supabase.storage.from('Collages').remove([storageFilePath]).catch((err) => {
+            console.log(err)
+        });
+
         const { data, error } = await supabase
         .storage
         .from('Collages')
