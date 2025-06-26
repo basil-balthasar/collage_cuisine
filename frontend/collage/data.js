@@ -31,6 +31,7 @@ function readData(data){
             saveFrameCount++
             if(saveFrameCount>=20){
                 window.bridge.saveImage()
+                displayGeneratingPopUp()
                 saveCooldown = true
                 saveFrameCount = 0
                 saveState = data[saveButton]
@@ -150,6 +151,7 @@ function joystickToPosition(joystick, position){
 var qrIMG = document.getElementById('qrIMG');
 var qrCodeDiv = document.getElementById('QRCode');
 var qrLoader = document.getElementById('qr-loader-bar');
+var generating = document.getElementById('generating');
 
 window.bridge.qrLink((event, qrLink)=>{
     console.log('got something from the bridge:', qrLink)
@@ -159,6 +161,7 @@ window.bridge.qrLink((event, qrLink)=>{
 //generate QRcode via webAPI
 function generateQR(link) {
     if (link) {
+        generating.classList.remove('fade-in');
         qrCodeDiv.classList.add('fade-in');
         qrLoader.classList.add('qr-fill');
         qrIMG.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + link;
@@ -174,3 +177,7 @@ function generateQR(link) {
 window.bridge.getAppVersion().then(version => {
     console.log(`App Version: ${version}`);
   });
+
+function displayGeneratingPopUp(){
+    generating.classList.add('fade-in');
+}
