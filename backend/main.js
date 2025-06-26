@@ -251,6 +251,7 @@ function openPort(teensyPort){
 parser.on('data', function(data) {
     data = data.split(",")
     mainWindow.webContents.send("data", data)
+    console.log("sent data to frontend")
 });
 
 
@@ -363,3 +364,8 @@ async function getRandomImageURL() {
         dialog.showMessageBox(diaWindow, diaWindowError)
     }
 }
+
+//gets version number
+ipcMain.handle('get-app-version', () => {
+    return app.getVersion();  // this gets version from package.json
+});

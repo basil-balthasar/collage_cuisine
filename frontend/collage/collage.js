@@ -25,6 +25,7 @@ function setup(){
 function draw(){
     background(0)
     if(!dataAssigned){
+        console.log("Data not assigned!")
         return
     }
     blendMode(BLEND)

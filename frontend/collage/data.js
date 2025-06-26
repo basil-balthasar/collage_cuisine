@@ -170,3 +170,7 @@ function generateQR(link) {
         console.error("Error. No QR link provided");
     }
 }
+
+window.bridge.getAppVersion().then(version => {
+    console.log(`App Version: ${version}`);
+  });

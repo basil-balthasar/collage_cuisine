@@ -12,7 +12,8 @@ let bridge = {
     saveImage: () => ipcRenderer.invoke("saveImage"),
     fileNames: () => ipcRenderer.invoke("fileNames"),
     qrLink: (callback) => ipcRenderer.on("qrLink", (callback)),
-    getDiaPath: () => ipcRenderer.invoke("getDiaPath")
+    getDiaPath: () => ipcRenderer.invoke("getDiaPath"),
+    getAppVersion: () => ipcRenderer.invoke('get-app-version')
 };
 
 contextBridge.exposeInMainWorld("bridge", bridge)
