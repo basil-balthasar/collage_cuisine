@@ -156,14 +156,9 @@ window.bridge.qrLink((event, qrLink)=>{
     generateQR(qrLink);
 })
 
-window.bridge.linkGenerating((event)=>{
-    geneating.classList.add('fade-in');
-})
-
 //generate QRcode via webAPI
 function generateQR(link) {
     if (link) {
-        geneating.classList.remove('fade-in');
         qrCodeDiv.classList.add('fade-in');
         qrLoader.classList.add('qr-fill');
         qrIMG.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + link;
