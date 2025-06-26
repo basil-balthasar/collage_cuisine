@@ -178,22 +178,19 @@ autoUpdater.on("error", (info)=>{
 //-----Serialport-----//
 
 async function getSerialPort(){
-    let teensyPort
     await SerialPort.list().then((ports, err) => {
     if(err) {
       console.error(err)
     }
 
+    const teensyPort = ports.find(port =>
+        (port.vendorId === '16C0' && port.productId === '0483') // Typical Teensy VID/PID
+    );
+
     if (ports.length === 0) {
       console.error("ERROR: No ports avaiable")
     }
 
-    /*Automatically connects to first port with "usbmodem" or "COM" in the name*/
-    ports.forEach(port => {
-        if(port.path.includes("usbmodem")||port.path.includes("COM")){
-            teensyPort = port
-        }
-    });
     if(teensyPort == null){
         console.error("Teensy not connected, will try again")
         if(!showSerialError){
@@ -251,7 +248,6 @@ function openPort(teensyPort){
 parser.on('data', function(data) {
     data = data.split(",")
     mainWindow.webContents.send("data", data)
-    console.log("sent data to frontend")
 });
 
 
