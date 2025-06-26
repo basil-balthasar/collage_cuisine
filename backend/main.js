@@ -276,6 +276,13 @@ async function saveImage(){
     "-" +
     date.getSeconds();
 
+    newFilename = "Collage-" + nameCounter;
+    if(nameCounter < 50){
+        nameCounter++
+    } else {    
+        nameCounter = 0
+    }
+
     /*Takes a screenshot of the main window and saves it to a folder called "Collagen" on the desktop*/
     mainWindow.webContents.capturePage().then((img)=>{
         fs.writeFile(savePath+filename+".png", img.toPNG(), "base64", function(err){
@@ -303,12 +310,6 @@ function getFileNames() {
 async function uploadCollage() {
 
     try {
-        newFilename = "Collage-" + nameCounter;
-        if(nameCounter < 50){
-            nameCounter++
-        } else {    
-            nameCounter = 0
-        }
         const storageFilePath = 'collages/' + newFilename + ".png";
         const collageFileBuffer = fs.readFileSync(savePath + filename + ".png");
         const { data, error } = await supabase
