@@ -185,8 +185,11 @@ async function getSerialPort(){
     }
 
     const teensyPort = ports.find(port =>
-        (port.vendorId === '16C0' && port.productId === '0483') // Typical Teensy VID/PID
-    );
+  port.vendorId && port.productId &&
+  port.vendorId.toLowerCase() === '16c0' &&
+  port.productId.toLowerCase() === '0483'
+);
+
 
     if (ports.length === 0) {
       console.error("ERROR: No ports avaiable")
